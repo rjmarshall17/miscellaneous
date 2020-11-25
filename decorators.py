@@ -4,6 +4,17 @@ from functools import wraps
 from random import randint
 
 
+# The following is a generic template
+def decorator(func):
+    @wraps(func)
+    def decorator_wrapper(*args, **kwargs):
+        # do something before
+        result = func(*args, **kwargs)
+        # do something after
+        return result
+    return decorator_wrapper
+
+
 def print_function(func):
     # @wraps wraps the inner function in order to preserve the name of the
     # wrapped/decorated function
