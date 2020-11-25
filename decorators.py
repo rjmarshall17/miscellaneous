@@ -2,6 +2,7 @@
 
 from functools import wraps
 from random import randint
+from time import perf_counter, sleep
 
 
 # The following is a generic template
@@ -32,6 +33,20 @@ def print_function(func):
 	return inner
 
 
+# Calculate the run time of a function
+def timer(func):
+    @wraps(func)
+    def timer_wrapper(*args, **kwargs):
+        start_time = perf_counter()
+        result = func(*args, **kwargs)
+        end_time = perf_counter()
+        run_time = end_time - start_time
+        print(f"Finished {func.__name__!r} in {run_time:.8f} seconds")
+        return result
+    return timer_wrapper
+
+
+@timer
 def add(a, b, c, d):
     return a + b + c + d
 
