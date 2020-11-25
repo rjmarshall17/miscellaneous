@@ -46,12 +46,24 @@ def timer(func):
     return timer_wrapper
 
 
-@timer
+# A generic debug wrapper to display the function name and arguments
+def debugger(func):
+    @wraps(func)
+    def debugger_wrapper(*args, **kwargs):
+        args_repr = [repr(x) for x in args]
+        kwargs_repr = [f"{k}={v!r}" for k, v in kwargs.items()]
+        signature = ", ".join(args_repr + kwargs_repr)
+        result = func(*args, **kwargs)
+        print(f"Calling {func.__name__}({signature}) = {result!r}")
+        return result
+    return debugger_wrapper
+
+
 def add(a, b, c, d):
     return a + b + c + d
 
 if __name__ == '__main__':
-    add = print_function(add)
+    add = debugger(add)
     help(add)
     a = randint(1, 30)
     b = randint(1, 30)
