@@ -27,7 +27,8 @@ Output: 6
 """
 
 
-def scoreOfParentheses(string_in: str) -> int:
+# Time: O(N) space: O(N)
+def scoreOfParentheses_recursive(string_in: str) -> int:
     def Count(i, j):
         # Score of balanced () string [i:j]
         ans = bal = 0
@@ -55,6 +56,17 @@ def scoreOfParentheses(string_in: str) -> int:
     return Count(0, len(string_in))
 
 
+# Time: O(N) space O(1)
+def scoreOfParentheses_iterative(string_in: str) -> int:
+    ans = k = 0
+    for i in range(len(string_in)):
+        k += 1 if string_in[i] == "(" else -1
+        if string_in[i - 1:i + 1] == "()":
+            print("Exponential 2 ** %d = %d" % (k, 2 ** k))
+            ans += 2 ** k
+        print("Current value of ans: %d" % ans)
+    return ans
+
 INPUT_STRINGS = [
     "()",
     "((()))",
@@ -73,7 +85,13 @@ EXPECTED_SCORES = [
 
 if __name__ == '__main__':
     for i, input in enumerate(INPUT_STRINGS):
-        score = scoreOfParentheses(input)
+        score_recursive = scoreOfParentheses_recursive(input)
         # print("The score for %s was: %d" % (input,score))
-        assert score == EXPECTED_SCORES[i]
-        print("The result (%d) for %s was correct" % (score, input))
+        assert score_recursive == EXPECTED_SCORES[i]
+        print("The recursive result (%d) for %s was correct" % (score_recursive, input))
+        print("="*80)
+        score_iterative = scoreOfParentheses_iterative(input)
+        # print("The score for %s was: %d" % (input,score))
+        assert score_iterative == EXPECTED_SCORES[i]
+        print("The iterative result (%d) for %s was correct" % (score_iterative, input))
+        print("="*80)
