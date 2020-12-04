@@ -5,6 +5,17 @@ from random import randint
 from time import perf_counter, sleep
 
 
+# The following is a generic template
+def decorator(func):
+    @wraps(func)
+    def decorator_wrapper(*args, **kwargs):
+        # do something before
+        wrapper_result = func(*args, **kwargs)
+        # do something after
+        return wrapper_result
+    return decorator_wrapper
+
+
 def checker(func):
     @wraps(func)
     def inner(*args, **kwargs):
@@ -20,27 +31,16 @@ def checker(func):
     return inner
 
 
-# The following is a generic template
-def decorator(func):
-    @wraps(func)
-    def decorator_wrapper(*args, **kwargs):
-        # do something before
-        result = func(*args, **kwargs)
-        # do something after
-        return result
-    return decorator_wrapper
-
-
 # Calculate the run time of a function
 def timer(func):
     @wraps(func)
     def timer_wrapper(*args, **kwargs):
         start_time = perf_counter()
-        result = func(*args, **kwargs)
+        timer_result = func(*args, **kwargs)
         end_time = perf_counter()
         run_time = end_time - start_time
         print(f"Finished {func.__name__!r} in {run_time:.8f} seconds")
-        return result
+        return timer_result
     return timer_wrapper
 
 
@@ -73,7 +73,7 @@ if __name__ == '__main__':
     result = add1(3, 4, b=5, a=10)
     print("The returned result is: %d" % result)
 
-    add2 = debugger(add2)
+    add2 = timer(debugger(add2))
     help(add2)
     a = randint(1, 30)
     b = randint(1, 30)
