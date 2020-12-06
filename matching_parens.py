@@ -16,6 +16,10 @@ def matchingParentheses(string_in):
         if character in MATCHING_PARENTHESES.values():
             parentheses.append(character)
         elif character in MATCHING_PARENTHESES:
+            # In case we start off with a closed parentheses and there
+            # is nothing in the stack
+            if not parentheses:
+                return False
             if parentheses[-1] != MATCHING_PARENTHESES[character]:
                 return False
             parentheses.pop()
