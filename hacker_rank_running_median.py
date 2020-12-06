@@ -71,6 +71,11 @@ There are n = 6 integers, so we must print the new median on a new line as each 
 # Complete the runningMedian function below.
 #
 
+###################################################################
+# Python heaps are always min heaps, therefore to create a max heap
+# you have to negate the value
+###################################################################
+
 
 def add_number(number, minheap, maxheap):
     if not maxheap or number < -maxheap[0]:
