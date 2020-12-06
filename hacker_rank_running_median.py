@@ -77,7 +77,16 @@ There are n = 6 integers, so we must print the new median on a new line as each 
 ###################################################################
 
 
+# The numbers less than the current median are stored on the maxheap,
+# which means that the largest number (at index 0) is the "top" of the
+# bottom half of the values. The minheap stores the top half of the
+# numbers, meaning that the lowest number (at index 0) is the smallest
+# of the large numbers.
+
 def add_number(number, minheap, maxheap):
+    # If there is nothing on the max heap, or the
+    # incoming number is less than the current negated
+    # max value, add it to the max heap.
     if not maxheap or number < -maxheap[0]:
         heappush(maxheap, -number)
     else:
@@ -108,6 +117,7 @@ def running_median(incoming_array):
         add_number(number, minheap, maxheap)
         # Balance the heaps, never more than 1 extra value per heap
         balance_heaps(minheap, maxheap)
+        print("The current heaps are:\n\tminheap=%s\n\tmaxheap=%s" % (minheap, maxheap))
         # Get the new median value and add to results
         results.append(get_median(minheap, maxheap))
     return results
