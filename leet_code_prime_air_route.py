@@ -80,60 +80,26 @@ EXAMPLE_INPUT = [
 
 def optimal_flight_path(max_travel_distance, forward_route_list, return_route_list):
     # Combine all of the incoming forward and return routes in the maximum number
-    # of combinations. Add them to a "route table" which is a dictionary where the
-    # key is the distance for that combination of routes.
-    # print("The max travel distance is: %d" % max_travel_distance)
-    route_table = {}
+    # of combinations and loop through them
+    # Looping through the incoming forward and return route lists has a time complexity
+    # of O(n+m) where n is the length of the forward route list and m is the length of
+    # the return route list. The space complexity is O(1) for the for expression.
+    best_distance = []
 
-    # The initial creation of the route_table has a time complexity of: O(n+m) where
-    # n is the length of the forward route list and m is the length of the return
-    # route list. The space complexity is O(1) for the for expression since, at this
-    # point I'm not putting the returned values anywhere, that comes later.
-    for to_from_route in [[[x[0], y[0]], x[-1] + y[-1]] for x in forward_route_list for y in return_route_list]:
-        # print("The total for routes %s is: %d" % (to_from_route[0], to_from_route[1]))
+    for distance, to_from_route in [[x[-1] + y[-1], [x[0], y[0]]] for x in forward_route_list for y in return_route_list]:
         # Inserts into a dictionary are time: O(1), space: O(n)
-        if to_from_route[1] in route_table:
-            route_table[to_from_route[1]].append(to_from_route[0])
-        else:
-            route_table[to_from_route[1]] = [to_from_route[0]]
+        if distance <= max_travel_distance:
+            if best_distance:
+                if distance == best_distance[0]:
+                    best_distance[1].append(to_from_route)
+                elif distance > best_distance[0]:
+                    best_distance = [distance, [to_from_route]]
+            else:
+                best_distance = [distance, [to_from_route]]
 
-    # print("The route table is:")
-    # pprint(route_table)
-    # print("The route table values are: %s" % list(route_table.values()))
-    #
-    # Time complexity for keys() for Python3 is O(1)
-    if len(route_table.keys()) == 1:
-        # Converting the route_table keys to a list is potentially
-        # O(N) from a time complexity standpoint. And O(k), where k
-        # is the number of keys, from a space complexity issue.
-        # Since we appear to have only one distance for all of the
-        # routes, and it's farther than max_travel_distance, we
-        # return an empty list.
-        if list(route_table.keys())[0] > max_travel_distance:
-            print("Best route(s): %s" % [])
-        else:
-            # It appears that the only distance is less than or equal
-            # to the max_travel_distance, so all routes would be the
-            # most optimal we can get for this set of routes.
-            print("Best route(s): %s" % list(route_table.values())[0])
-    else:
-        # We have more than one distance, let's find the one(s) that
-        # come closest to the max_travel_distance, i.e. the best/most
-        # optimal distance.
-        best_distance = None
-        # Looping through all of the items in the route_table dictionary
-        # will have a time complexity of O(n).
-        for distance, route in route_table.items():
-            if distance <= max_travel_distance:
-                # Let's see if the current route is a more optimal route than
-                # the one we have so far.
-                if best_distance:
-                    if distance > best_distance[0]:
-                        best_distance = [distance, route]
-                else:
-                    best_distance = [distance, route]
-        print("Best route(s}: %s" % best_distance[1])
+    print("Best route(s}: %s" % best_distance[1])
     print("="*80)
+
 
 if __name__ == '__main__':
     for input_data in EXAMPLE_INPUT:
