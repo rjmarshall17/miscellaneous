@@ -70,8 +70,8 @@ not exceed 7,000 [2,1] is the only optimal pair.
 """
 
 EXAMPLE_INPUT = [
-    (11, [[1, 5], [2, 5]], [ [1, 5], [2, 5] ]),
-    (10, [[1, 5], [2, 5]], [ [1, 5], [2, 5] ]),
+    (11, [[1, 5], [2, 5]], [[1, 5], [2, 5]]),
+    (10, [[1, 5], [2, 5]], [[1, 5], [2, 5]]),
     (20, [[1, 8], [2, 7], [3, 14]], [[1, 5], [2, 10], [3, 14]]),
     (20, [[1, 8], [2, 15], [3, 9]], [[1, 8], [2, 11], [3, 12]]),
     (7000, [[1, 2000], [2, 4000], [3, 6000]], [[1, 2000]]),
@@ -79,15 +79,29 @@ EXAMPLE_INPUT = [
 
 
 def optimal_flight_path(max_travel_distance, forward_route_list, return_route_list):
+    # If we don't have either a forward_route_list and/or a return_route_list, return
+    # an empty list. Check for a constraint the may make this test unnecessary.
+    if not forward_route_list or not return_route_list:
+        return []
+
+    # If we have an invalid max_travel_distance - check for a constraint on
+    # this to see if this check is necessary.
+    if max_travel_distance <= 0:
+        return []
+
     # Combine all of the incoming forward and return routes in the maximum number
-    # of combinations and loop through them
+    # of combinations and loop through them.
     # Looping through the incoming forward and return route lists has a time complexity
     # of O(n+m) where n is the length of the forward route list and m is the length of
     # the return route list. The space complexity is O(1) for the for expression.
     best_distance = []
 
-    for distance, to_from_route in [[x[-1] + y[-1], [x[0], y[0]]] for x in forward_route_list for y in return_route_list]:
-        # Inserts into a dictionary are time: O(1), space: O(n)
+    # The format of the incoming forward and return route lists is: [ID, distance]
+    for distance, to_from_route in [[frl[1] + rrl[1], [frl[0], rrl[0]]] for frl in forward_route_list
+                                    for rrl in return_route_list]:
+        # Inserts into the best_distance list are: time: O(1). But depending on the distances
+        # there may be more than one, so the worst case here is O(n) where n is the number of
+        # distances that are less than or equal to the max_travel_distance, space: O(n)
         if distance <= max_travel_distance:
             if best_distance:
                 if distance == best_distance[0]:
@@ -97,6 +111,7 @@ def optimal_flight_path(max_travel_distance, forward_route_list, return_route_li
             else:
                 best_distance = [distance, [to_from_route]]
 
+    # The time complexity for this function is: O(n+m) (see above)
     print("Best route(s}: %s" % best_distance[1])
     print("="*80)
 
