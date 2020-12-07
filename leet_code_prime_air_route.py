@@ -77,6 +77,13 @@ EXAMPLE_INPUT = [
     (7000, [[1, 2000], [2, 4000], [3, 6000]], [[1, 2000]]),
 ]
 
+EXPECTED_RESULTS = [
+    [[1, 1], [1, 2], [2, 1], [2, 2]],
+    [[1, 1], [1, 2], [2, 1], [2, 2]],
+    [[3, 1]],
+    [[1, 3], [3, 2]],
+    [[2, 1]],
+]
 
 def optimal_flight_path(max_travel_distance, forward_route_list, return_route_list):
     # If we don't have either a forward_route_list and/or a return_route_list, return
@@ -99,8 +106,8 @@ def optimal_flight_path(max_travel_distance, forward_route_list, return_route_li
     # The format of the incoming forward and return route lists is: [ID, distance]
     for distance, to_from_route in [[frl[1] + rrl[1], [frl[0], rrl[0]]] for frl in forward_route_list
                                     for rrl in return_route_list]:
-        # Inserts into the best_distance list are: time: O(1). But depending on the distances
-        # there may be more than one, so the worst case here is O(n) where n is the number of
+        # Inserts into the best_distance list are: time: O(1). But depending on the distances,
+        # there may be more than one, so the worst case here is O(x) where x is the number of
         # distances that are less than or equal to the max_travel_distance, space: O(n)
         if distance <= max_travel_distance:
             if best_distance:
@@ -112,10 +119,11 @@ def optimal_flight_path(max_travel_distance, forward_route_list, return_route_li
                 best_distance = [distance, [to_from_route]]
 
     # The time complexity for this function is: O(n+m) (see above)
-    print("Best route(s}: %s" % best_distance[1])
-    print("="*80)
+    return best_distance[1]
 
 
 if __name__ == '__main__':
-    for input_data in EXAMPLE_INPUT:
-        optimal_flight_path(input_data[0], input_data[1], input_data[2])
+    for i, input_data in enumerate(EXAMPLE_INPUT):
+        results = optimal_flight_path(input_data[0], input_data[1], input_data[2])
+        assert results == EXPECTED_RESULTS[i]
+        print("The results for input %d matchted the expected results: %s" % (i,results))
