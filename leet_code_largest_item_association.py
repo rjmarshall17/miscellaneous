@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
 
 from collections import deque, defaultdict
-import networkx as nx
-import matplotlib.pyplot as plt
-import matplotlib
-matplotlib.use("macosx")
+from typing import List
+from pprint import pprint
+# import networkx as nx
+# import matplotlib.pyplot as plt
+# import matplotlib
+# matplotlib.use("macosx")
 # from typing import List
 
 """
@@ -54,16 +56,62 @@ Explanation:
     So the output is: [item3, item4, item5]
 """
 
-if __name__ == '__main__':
-    item_association = [['item1', 'item2'], ['item3', 'item4'], ['item4', 'item5']]
+
+EXAMPLE_INPUTS =[
+    [['item1', 'item2'], ['item3', 'item4'], ['item4', 'item5']],
+    [['item1', 'item2'], ['item4', 'item5'], ['item3', 'item4'], ["item1", "item4"]],
+]
+
+EXPECTED_RESULTS = [
+    ['item3', 'item4', 'item5'],
+    ['item1', 'item2', 'item3', 'item4', 'item5'],
+]
+
+
+def largest_item_association(associations: List[List[str]]):
     item_map = defaultdict(set)
-    for item_pair in item_association:
+
+    for item_pair in associations:
         item_map[item_pair[0]].add(item_pair[1])
         item_map[item_pair[1]].add(item_pair[0])
 
-    G = nx.Graph(item_map)
-    pos = nx.spring_layout(G)
-    nx.draw_networkx_nodes(G, pos)
-    nx.draw_networkx_edges(G, pos)
-    nx.draw_networkx_labels(G, pos)
-    plt.show()
+    print("The item map is:")
+    pprint(item_map)
+    largest_group = []
+    visited = set()
+
+    for key, val in item_map.items():
+        print("Working on key: %s val: %s" % (key,val))
+        if key not in visited:
+            print("key (%s) has not been visited" % key)
+            current_group = []
+            queue = deque()
+            queue.append(key)
+            print("Starting while queue loop")
+            while queue:
+                print("The queue is: %s" % queue)
+                current = queue.popleft()
+                print("current (just popped left from queue) is: %s" % current)
+                visited.add(current)
+                current_group.append(current)
+                print("current_group: %s" % current_group)
+                for neighbor in item_map[current]:
+                    if neighbor not in visited:
+                        print("Visiting neighbor: %s" % neighbor)
+                        queue.append(neighbor)
+            print("At end of while loop, checking if current group is larger")
+            if len(current_group) > len(largest_group):
+                largest_group = current_group.copy()
+        else:
+            print("key %s has already been visited" % key)
+
+    largest_group.sort()
+    return largest_group
+
+
+if __name__ == '__main__':
+    for i, input_data in enumerate(EXAMPLE_INPUTS):
+        results = largest_item_association(input_data)
+        assert results == EXPECTED_RESULTS[i]
+        print("The results %s match the input:" % results)
+        print("%s" % input_data)
