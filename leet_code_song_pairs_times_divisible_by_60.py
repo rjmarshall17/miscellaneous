@@ -119,7 +119,7 @@ def numPairsDivisibleBy60(time: List[int]) -> int:
             #                                                     remainders[60 - t % 60]))
         remainders[t % 60] += 1  # remember to update the remainders
         # print("End of for loop, incrementing: remainders[%d] += 1 (%d)" % (t % 60, remainders[t % 60]))
-    print("remainders=%s" % remainders)
+    # print("remainders=%s" % remainders)
     return ret
 
 
