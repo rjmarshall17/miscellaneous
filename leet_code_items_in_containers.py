@@ -86,7 +86,7 @@ compartments in this substring.
 
 
 def count_items(items_string: str) -> int:
-    print("count_items: Got string: '%s'" % items_string)
+    # print("count_items: Got string: '%s'" % items_string)
     count = 0
     total_count = 0
     add_item = False
@@ -132,9 +132,9 @@ if __name__ == '__main__':
 
     expected_results = eval(open(os.environ['EXPECTED_RESULTS'],'r').read().strip())
     results = numberOfItems(s=compartments_string, startIndices=startIndices, endIndices=endIndices)
-    print("results='%s' expected_results='%s'" % (results, expected_results))
+    # print("results='%s' expected_results='%s'" % (results, expected_results))
     assert results == expected_results
-    print("The results from '%s' startIndices=%s endIndices=%s matches the expected results: %s" % (compartments_string,
-                                                                                                    startIndices,
-                                                                                                    endIndices,
-                                                                                                    results))
+    print("The results from '%s':" % compartments_string)
+    print("startIndices: %s" % startIndices)
+    print("  endIndices: %s" % endIndices)
+    print("matches the expected results: %s" % results)
