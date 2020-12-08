@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import os
+from typing import List
 
 """
 Amazon would like to know how much inventory exists in their closed
@@ -82,3 +83,58 @@ The substring from index = 1 to index = 3 is '*|*'. There are no
 compartments in this substring.
 
 """
+
+
+def count_items(items_string: str) -> int:
+    print("count_items: Got string: '%s'" % items_string)
+    count = 0
+    total_count = 0
+    add_item = False
+    for character in items_string:
+        if character == '|':
+            if not add_item:
+                add_item = True
+            total_count += count
+            count = 0
+            continue
+        if character == '*' and add_item:
+            count += 1
+    return total_count
+
+
+def numberOfItems(s: str, startIndices: List[int], endIndices: List[int]) -> List[int]:
+    if len(startIndices) != len(endIndices):
+        raise ValueError("Invalid input for start and end indices, lengths are not equal")
+
+    counts = []
+    if len(s) > 0:
+        for i in range(len(startIndices)):
+            counts.append(count_items(s[startIndices[i] - 1:endIndices[i]]))
+    return counts
+
+
+if __name__ == '__main__':
+    compartments_string = input().strip()
+    startIndices = []
+    endIndices = []
+
+    start_count = int(input().strip())
+    for _ in range(start_count):
+        startIndices.append(int(input().strip()))
+
+    end_count = int(input().strip())
+    for _ in range(end_count):
+        endIndices.append(int(input().strip()))
+
+    # print("The compartments string is: '%s', startIndices=%s endIndices=%s" % (compartments_string,
+    #                                                                            startIndices,
+    #                                                                            endIndices))
+
+    expected_results = eval(open(os.environ['EXPECTED_RESULTS'],'r').read().strip())
+    results = numberOfItems(s=compartments_string, startIndices=startIndices, endIndices=endIndices)
+    print("results='%s' expected_results='%s'" % (results, expected_results))
+    assert results == expected_results
+    print("The results from '%s' startIndices=%s endIndices=%s matches the expected results: %s" % (compartments_string,
+                                                                                                    startIndices,
+                                                                                                    endIndices,
+                                                                                                    results))
