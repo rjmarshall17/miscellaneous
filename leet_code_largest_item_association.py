@@ -1,6 +1,11 @@
 #!/usr/bin/env python3
 
-from typing import List
+from collections import deque, defaultdict
+import networkx as nx
+import matplotlib.pyplot as plt
+import matplotlib
+matplotlib.use("macosx")
+# from typing import List
 
 """
 In order to improve customer experience, Amazon has developed a system to provide recommendations
@@ -48,3 +53,17 @@ Explanation:
     In the available item associations, group2 has the largest association.
     So the output is: [item3, item4, item5]
 """
+
+if __name__ == '__main__':
+    item_association = [['item1', 'item2'], ['item3', 'item4'], ['item4', 'item5']]
+    item_map = defaultdict(set)
+    for item_pair in item_association:
+        item_map[item_pair[0]].add(item_pair[1])
+        item_map[item_pair[1]].add(item_pair[0])
+
+    G = nx.Graph(item_map)
+    pos = nx.spring_layout(G)
+    nx.draw_networkx_nodes(G, pos)
+    nx.draw_networkx_edges(G, pos)
+    nx.draw_networkx_labels(G, pos)
+    plt.show()
