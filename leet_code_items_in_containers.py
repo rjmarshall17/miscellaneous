@@ -102,6 +102,8 @@ def count_items(items_string: str) -> int:
     return total_count
 
 
+# Time complexity: O(mn) where m is the number of indices and n is the number of elements
+# Space complexity: O(1)
 def numberOfItems(s: str, startIndices: List[int], endIndices: List[int]) -> List[int]:
     if len(startIndices) != len(endIndices):
         raise ValueError("Invalid input for start and end indices, lengths are not equal")
