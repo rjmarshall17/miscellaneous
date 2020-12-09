@@ -106,6 +106,7 @@ def let_person_go(person1, person2, the_queue, return_times):
     # print("The queue is now: %s" % the_queue)
     return person1[0]
 
+
 def turnstile(times: List[int], directions: List[int]) -> List[int]:
     # The queue is setup using the incoming times and directions along
     # with the index of the element.
