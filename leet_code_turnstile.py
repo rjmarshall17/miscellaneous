@@ -102,14 +102,16 @@ def let_person_go(person1, person2, the_queue, return_times):
     return_times[person1[2]] = person1[0]
     person2[0] += 1
     # print("About the prepend person2: %s" % person2)
+    # The appendleft() is O(1) for time complexity
     the_queue.appendleft(person2)
     # print("The queue is now: %s" % the_queue)
-    return person1[0]
 
 
 def turnstile(times: List[int], directions: List[int]) -> List[int]:
     # The queue is setup using the incoming times and directions along
     # with the index of the element.
+    # Creating the initial queue is going to take O(n) where n is the
+    # number of times/directions, space is also O(n)
     the_queue = deque([[times[i],directions[i], i] for i in range(len(times))])
     # print("The queue is:\n%s" % the_queue)
 
@@ -123,6 +125,7 @@ def turnstile(times: List[int], directions: List[int]) -> List[int]:
 
     # breakpoint()
     while the_queue:
+        # Because this is a deque, a pop/popleft is O(1) time.
         current = the_queue.popleft()
         # print("The current is: %s last used was: %d" % (current, last_used))
         if current[0] <= last_used:
