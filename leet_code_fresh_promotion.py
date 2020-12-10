@@ -173,6 +173,8 @@ def fresh_promotion_check(code_list: List[List[str]], shopping_cart: List[str]) 
     # Make sure there are no spaces around the shopping cart items, it helps speed
     # up the regular expression search to not check for spaces around the commas.
     # Also make sure all of the items are in lowercase.
+    # Joining all of the items from the shopping list into a string takes O(n) time,
+    # where n is the length of the output string
     if promotion_re.search(','.join([x.lower().strip() for x in shopping_cart])) is None:
         return 0
     return 1

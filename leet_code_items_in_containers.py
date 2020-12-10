@@ -90,6 +90,8 @@ def count_items(items_string: str) -> int:
     count = 0
     total_count = 0
     add_item = False
+    # Time complexity: O(n) where n = length of the string,
+    # Space complexity: O(1)
     for character in items_string:
         if character == '|':
             if not add_item:
@@ -104,14 +106,14 @@ def count_items(items_string: str) -> int:
 
 # Time complexity: O(mn) where m is the number of indices and n is the number of elements
 # Space complexity: O(1)
-def numberOfItems(s: str, startIndices: List[int], endIndices: List[int]) -> List[int]:
+def numberOfItems(compartment_string: str, startIndices: List[int], endIndices: List[int]) -> List[int]:
     if len(startIndices) != len(endIndices):
         raise ValueError("Invalid input for start and end indices, lengths are not equal")
 
     counts = []
-    if len(s) > 0:
+    if compartment_string:
         for i in range(len(startIndices)):
-            counts.append(count_items(s[startIndices[i] - 1:endIndices[i]]))
+            counts.append(count_items(compartment_string[startIndices[i] - 1:endIndices[i]]))
     return counts
 
 
@@ -133,7 +135,7 @@ if __name__ == '__main__':
     #                                                                            endIndices))
 
     expected_results = eval(open(os.environ['EXPECTED_RESULTS'],'r').read().strip())
-    results = numberOfItems(s=compartments_string, startIndices=startIndices, endIndices=endIndices)
+    results = numberOfItems(compartment_string=compartments_string, startIndices=startIndices, endIndices=endIndices)
     # print("results='%s' expected_results='%s'" % (results, expected_results))
     assert results == expected_results
     print("The results from '%s':" % compartments_string)
