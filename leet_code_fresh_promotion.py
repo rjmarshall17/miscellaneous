@@ -194,6 +194,9 @@ def fresh_promotion_check(code_list: List[List[str]], shopping_cart: List[str]) 
 def non_regex_fresh_promotion_check(code_list: List[List[str]], shopping_cart: List[str]) -> int:
     if len(code_list) > len(shopping_cart):
         return 0
+    print("Incoming lists are:")
+    print("\tcode_list: %s" % code_list)
+    print("\tshopping cart: %s" % shopping_cart)
     last_start = 0
     code_group = 0
     code_sublist_count = 0
@@ -205,8 +208,22 @@ def non_regex_fresh_promotion_check(code_list: List[List[str]], shopping_cart: L
         # goes beyond the suggested line length from PEP 8 of 120 characters. This works out,
         # in essence to an or of the two conditions.
         found_match = code_list[code_group][code_sublist_count] == shopping_cart[shopping_cart_index]
+        if found_match:
+            print("Found a match of: %s([%d][%d]) against %s[%d]" %
+                  (code_list[code_group][code_sublist_count],
+                   code_group,
+                   code_sublist_count,
+                   shopping_cart[shopping_cart_index:],
+                   shopping_cart_index))
         if not found_match:
             found_match = code_list[code_group][code_sublist_count] == WILDCARD
+            if found_match:
+                print("Found a wildcard of: %s([%d][%d]) against %s[%d]" %
+                      (code_list[code_group][code_sublist_count],
+                       code_group,
+                       code_sublist_count,
+                       shopping_cart[shopping_cart_index:],
+                       shopping_cart_index))
         if found_match:
             # Because we matched, either the item or against the WILDCARD, move to the next item in
             # both the current code sublist and shopping cart.
@@ -221,6 +238,7 @@ def non_regex_fresh_promotion_check(code_list: List[List[str]], shopping_cart: L
                     return WINNER
                 code_sublist_count = 0
         else:
+            print("Did NOT find a match")
             # Special case, if the code sublist count is 0, then bump the shopping cart index
             if code_sublist_count == 0:
                 shopping_cart_index += 1
