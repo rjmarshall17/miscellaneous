@@ -77,49 +77,51 @@ There are n = 6 integers, so we must print the new median on a new line as each 
 ###################################################################
 
 
-# The numbers less than the current median are stored on the maxheap,
+# The numbers less than the current median are stored on the maximum_heap,
 # which means that the largest number (at index 0) is the "top" of the
-# bottom half of the values. The minheap stores the top half of the
+# bottom half of the values. The minimum_heap stores the top half of the
 # numbers, meaning that the lowest number (at index 0) is the smallest
 # of the large numbers.
 
-def add_number(number, minheap, maxheap):
+def add_number(number, minimum_heap, maximum_heap):
     # If there is nothing on the max heap, or the
     # incoming number is less than the current negated
     # max value, add it to the max heap.
-    if not maxheap or number < -maxheap[0]:
-        heappush(maxheap, -number)
+    if not maximum_heap or number < -maximum_heap[0]:
+        heappush(maximum_heap, -number)
     else:
-        heappush(minheap, number)
+        heappush(minimum_heap, number)
 
 
-def balance_heaps(minheap, maxheap):
-    if len(minheap) - len(maxheap) >= 2:
-        heappush(maxheap, -heappop(minheap))
-    if len(maxheap) - len(minheap) >= 2:
-        heappush(minheap, -heappop(maxheap))
+def balance_heaps(minimum_heap, maximum_heap):
+    if len(minimum_heap) - len(maximum_heap) >= 2:
+        heappush(maximum_heap, -heappop(minimum_heap))
+    if len(maximum_heap) - len(minimum_heap) >= 2:
+        heappush(minimum_heap, -heappop(maximum_heap))
 
 
-def get_median(minheap, maxheap):
-    if len(minheap) == len(maxheap):
-        return (minheap[0] - maxheap[0])/2
-    elif len(minheap) > len(maxheap):
-        return float(minheap[0])
-    return float(-maxheap[0])
+def get_median(minimum_heap, maximum_heap):
+    if len(minimum_heap) == len(maximum_heap):
+        return (minimum_heap[0] - maximum_heap[0])/2
+    elif len(minimum_heap) > len(maximum_heap):
+        return float(minimum_heap[0])
+    return float(-maximum_heap[0])
 
 
 def running_median(incoming_array):
     results = []
-    minheap = []
-    maxheap = []
+    minimum_heap = []
+    maximum_heap = []
     for number in incoming_array:
         # Add the number to the most appropriate heap
-        add_number(number, minheap, maxheap)
+        add_number(number, minimum_heap, maximum_heap)
         # Balance the heaps, never more than 1 extra value per heap
-        balance_heaps(minheap, maxheap)
-        print("The current heaps are:\n\tminheap=%s\n\tmaxheap=%s" % (minheap, maxheap))
+        balance_heaps(minimum_heap, maximum_heap)
+        # print("The current heaps are:")
+        # print("\tminimum_heap=%s" % minimum_heap)
+        # print("\tmaximum_heap=%s" % maximum_heap)
         # Get the new median value and add to results
-        results.append(get_median(minheap, maxheap))
+        results.append(get_median(minimum_heap, maximum_heap))
     return results
 
 
