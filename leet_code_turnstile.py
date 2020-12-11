@@ -97,10 +97,15 @@ EXITING = 1
 ENTERING = 0
 ENETERING_EXITING = ["Entering", "Exiting"]
 
+# The elements of the queue will be:
+TIME = 0
+DIRECTION = 1
+INDEX = 2
+
 
 def let_person_go(person1, person2, the_queue, return_times):
-    return_times[person1[2]] = person1[0]
-    person2[0] += 1
+    return_times[person1[INDEX]] = person1[TIME]
+    person2[TIME] += 1
     # print("About the prepend person2: %s" % person2)
     # The appendleft() is O(1) for time complexity
     the_queue.appendleft(person2)
@@ -128,65 +133,69 @@ def turnstile(times: List[int], directions: List[int]) -> List[int]:
         # Because this is a deque, a pop/popleft is O(1) time.
         current = the_queue.popleft()
         # print("The current is: %s last used was: %d" % (current, last_used))
-        if current[0] <= last_used:
-            current[0] = last_used + 1
+        if current[TIME] <= last_used:
+            current[TIME] = last_used + 1
         # If the current person arrived at the same time as the next person
         # in the queue, decide who goes first by direction
-        if the_queue and current[0] == the_queue[0][0]:
+        if the_queue and current[TIME] == the_queue[0][TIME]:
             next_person = the_queue.popleft()
             # print("The current person is: %s the next person is: %s" % (current,
             #                                                             next_person))
             # Check to see if the turnstile has just been used, or if
             # it hasn't been used for at least 1 second, if so, prefer
             # the person exiting to the person entering
-            if last_used < 0 or current[0] - last_used > 1:
+            if last_used < 0 or current[TIME] - last_used > 1:
                 # print("The turnstile has not been used recently")
                 # Let which ever one is exiting go first
-                if current[1] == EXITING:
+                if current[DIRECTION] == EXITING:
                     # print("Current person is exiting")
                     let_person_go(current, next_person, the_queue, return_times)
-                    last_used = current[0]
+                    last_used = current[TIME]
                     last_direction = EXITING
-                elif next_person[1] == EXITING:
+                elif next_person[DIRECTION] == EXITING:
                     # print("The next person is exiting")
                     let_person_go(next_person, current, the_queue, return_times)
-                    last_used = next_person[0]
+                    last_used = next_person[TIME]
                     last_direction = EXITING
                 # Looks like neither person is exiting, let current go
                 else:
                     # print("Neither person is exiting")
                     let_person_go(current, next_person, the_queue, return_times)
-                    last_used = current[0]
-                    last_direction = current[1]
+                    last_used = current[TIME]
+                    last_direction = current[DIRECTION]
             # OK, so the turnstile has been recently used
             else:
-                # They are both going the same direction, let current go
+                # Since the turnstile has been used recently, we keep the direction
+                # the same.
                 # print("The turnstile has been used recently, last direction=%s" % ENETERING_EXITING[last_direction])
                 # print("The current person: %s next person: %s" % (current, next_person))
-                if current[1] == last_direction:
+                if current[DIRECTION] == last_direction:
                     let_person_go(current, next_person, the_queue, return_times)
-                    last_used = current[0]
-                elif next_person[1] == last_direction:
+                    last_used = current[TIME]
+                elif next_person[DIRECTION] == last_direction:
                     let_person_go(next_person, current, the_queue, return_times)
-                    last_used = next_person[0]
+                    last_used = next_person[TIME]
                 # Change of direction, let the first person go
                 else:
                     let_person_go(current, next_person, the_queue, return_times)
-                    last_used = current[0]
-                    last_direction = current[1]
+                    last_used = current[TIME]
+                    last_direction = current[DIRECTION]
         else:
-            if current[0] == last_used:
-                return_times[current[2]] = current[0] + 1
+            if current[TIME] == last_used:
+                return_times[current[INDEX]] = current[TIME] + 1
             else:
-                return_times[current[2]] = current[0]
-            last_direction = current[1]
-            last_used = current[0]
+                return_times[current[INDEX]] = current[TIME]
+            last_direction = current[DIRECTION]
+            last_used = current[TIME]
     return return_times
 
 
 if __name__ == '__main__':
     for i,input_data in enumerate(EXAMPLE_INPUTS):
         results = turnstile(times=input_data[0], directions=input_data[1])
+        error_string = "The returned results (%s) do not match the expected result: %s" % (results,
+                                                                                           EXPECTED_RESULTS[i])
+        assert results == EXPECTED_RESULTS[i], error_string
         print("The results were: %s the expected results are: %s" % (results,
                                                                      EXPECTED_RESULTS[i]))
         print("     Times: %s" % input_data[0])

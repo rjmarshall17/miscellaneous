@@ -102,9 +102,14 @@ def balance_heaps(minimum_heap, maximum_heap):
 
 def get_median(minimum_heap, maximum_heap):
     if len(minimum_heap) == len(maximum_heap):
+        # Because the maximum_heap contains negative numbers, we subtract,
+        # i.e. add, the value from the maximum_heap to the value from the
+        # minimum_heap and then divide by 2.
         return (minimum_heap[0] - maximum_heap[0])/2
     elif len(minimum_heap) > len(maximum_heap):
         return float(minimum_heap[0])
+    # Again, the maximum_heap contains negative numbers in order
+    # to allow a minimum_heap to work as a maximum_heap.
     return float(-maximum_heap[0])
 
 
