@@ -150,9 +150,9 @@ EXPECTED_RESULTS = [
 ]
 
 
-# Ran timeit to see which was faster. The non-regex version ran in an average of 1.7981394702000046
+# Ran timeit to see which was faster. The new non-regex version ran in an average of 1.2534109627002181
 # seconds where the regex version (which has to compile the code_list every time) took an average
-# of 4.25099621735003 which makes it 2.5, or so, times slower. So, the short answer is don't use
+# of 4.25099621735003 which makes almost 3.5, or so, times slower. So, the short answer is don't use
 # regex, it's too slow.
 
 # By removing checks for spaces around the commas in the pattern, it reduced the time
@@ -164,103 +164,86 @@ EXPECTED_RESULTS = [
 # size of the regular expression. Space is O(n) worst case, this would assume that
 # none of the values in the code list can be replaced by a special sequence, i.e.
 # \w+ for "anything".
-def build_regex(code_list):
-    pattern = ''
-    for code_group in code_list:
-        if pattern:
-            pattern += r'[\w\s,]{0,}'
-        pattern += ",".join([str(x).lower().replace(WILDCARD, r'\w+') for x in code_group])
-    # print("code_list: %s" % code_list)
-    # print("  pattern: %s" % pattern)
-    return re.compile(pattern)
+# def build_regex(code_list):
+#     pattern = ''
+#     for code_group in code_list:
+#         if pattern:
+#             pattern += r'[\w\s,]{0,}'
+#         pattern += ",".join([str(x).lower().replace(WILDCARD, r'\w+') for x in code_group])
+#     # print("code_list: %s" % code_list)
+#     # print("  pattern: %s" % pattern)
+#     return re.compile(pattern)
 
 
 # There doesn't appear to be a good way to measure the time complexity of a regular
 # expression search.
-def fresh_promotion_check(code_list: List[List[str]], shopping_cart: List[str]) -> int:
-    promotion_re = build_regex(code_list)
-    # Make sure there are no spaces around the shopping cart items, it helps speed
-    # up the regular expression search to not check for spaces around the commas.
-    # Also make sure all of the items are in lowercase.
-    # Joining all of the items from the shopping list into a string takes O(n) time,
-    # where n is the length of the output string
-    if promotion_re.search(','.join([x.lower().strip() for x in shopping_cart])) is None:
-        return LOSER
-    return WINNER
+# def fresh_promotion_check(code_list: List[List[str]], shopping_cart: List[str]) -> int:
+#     promotion_re = build_regex(code_list)
+#     # Make sure there are no spaces around the shopping cart items, it helps speed
+#     # up the regular expression search to not check for spaces around the commas.
+#     # Also make sure all of the items are in lowercase.
+#     # Joining all of the items from the shopping list into a string takes O(n) time,
+#     # where n is the length of the output string
+#     if promotion_re.search(','.join([x.lower().strip() for x in shopping_cart])) is None:
+#         return LOSER
+#     return WINNER
 
 
 # The time complexity is: O(n+m) because we will go through at most n (number of items in the
-# code list) plus m (number of items in the shopping cart), space is: O(1)
-def non_regex_fresh_promotion_check(code_list: List[List[str]], shopping_cart: List[str]) -> int:
-    if len(code_list) > len(shopping_cart):
-        return 0
-    print("Incoming lists are:")
-    print("\tcode_list: %s" % code_list)
-    print("\tshopping cart: %s" % shopping_cart)
-    last_start = 0
-    code_group = 0
-    code_sublist_count = 0
+# code list) plus m (number of items in the shopping cart). The wildcard loop is O(w) where w
+# is the number of wildcards in a code sublist, but since that is less than O(n+m), it doesn't
+# really count. The space is: O(w) where w is the maximum number of wildcards in a code sublist.
+# Since we are not copying either the code_list or the shopping cart, the space requirement for
+# them is O(1).
+def fresh_promotion_check(code_list: List[List[str]], shopping_cart: List[str]) -> int:
+    # print("Incoming data is:")
+    # print("    code_list: %s" % code_list)
+    # print("shopping_cart: %s" % shopping_cart)
+    # Start with the shopping_cart_index = 0
     shopping_cart_index = 0
-
-    # The code_group is for the sub-lists of the incoming code_list
-    while code_group < len(code_list) and shopping_cart_index < len(shopping_cart):
-        # I broke this up in order to prevent the if statement from getting so long that it
-        # goes beyond the suggested line length from PEP 8 of 120 characters. This works out,
-        # in essence to an or of the two conditions.
-        found_match = code_list[code_group][code_sublist_count] == shopping_cart[shopping_cart_index]
-        if found_match:
-            print("Found a match of: %s([%d][%d]) against %s[%d]" %
-                  (code_list[code_group][code_sublist_count],
-                   code_group,
-                   code_sublist_count,
-                   shopping_cart[shopping_cart_index:],
-                   shopping_cart_index))
-        if not found_match:
-            found_match = code_list[code_group][code_sublist_count] == WILDCARD
-            if found_match:
-                print("Found a wildcard of: %s([%d][%d]) against %s[%d]" %
-                      (code_list[code_group][code_sublist_count],
-                       code_group,
-                       code_sublist_count,
-                       shopping_cart[shopping_cart_index:],
-                       shopping_cart_index))
-        if found_match:
-            # Because we matched, either the item or against the WILDCARD, move to the next item in
-            # both the current code sublist and shopping cart.
-            code_sublist_count += 1
+    # Go through each code_list sublist
+    for code_sublist in code_list:
+        # If we are already at the end of the shopping cart, and we're just starting on the
+        # next code_sublist, then we won't find a match.
+        if shopping_cart_index >= len(shopping_cart):
+            return LOSER
+        # print("Working on code_sublist: %s" % code_sublist)
+        # Initialize the list of wildcard indices
+        wildcard_indices = []
+        # Set match_found to False initially
+        match_found = False
+        if code_sublist.count(WILDCARD):
+            for find_wildcards_index in range(len(code_sublist)):
+                if code_sublist[find_wildcards_index] == WILDCARD:
+                    wildcard_indices.append(find_wildcards_index)
+        # print("The wildcard indices are: %s" % wildcard_indices)
+        while shopping_cart_index < len(shopping_cart):
+            for wildcard_index in wildcard_indices:
+                code_sublist[wildcard_index] = \
+                    shopping_cart[shopping_cart_index:shopping_cart_index + len(code_sublist)][wildcard_index]
+            # print("Checking %s in %s" % (code_sublist,
+            #                              shopping_cart[shopping_cart_index:shopping_cart_index+len(code_sublist)]))
+            if code_sublist == shopping_cart[shopping_cart_index:shopping_cart_index+len(code_sublist)]:
+                match_found = True
+                # print("Found a match for %s at %d in %s" % (code_sublist, shopping_cart_index, shopping_cart))
+                break
             shopping_cart_index += 1
-            # If we reached the last fruit in the sublist, then move to the next sublist
-            if code_sublist_count == len(code_list[code_group]):
-                code_group += 1
-                # last_start = shopping_cart_index
-                # If we have reached the end of the code list, we're good
-                if code_group == len(code_list):
-                    return WINNER
-                code_sublist_count = 0
-        else:
-            print("Did NOT find a match")
-            # Special case, if the code sublist count is 0, then bump the shopping cart index
-            if code_sublist_count == 0:
-                shopping_cart_index += 1
-                last_start = shopping_cart_index
-            # Else, because we didn't find a match, need to start again at the beginning of the sublist
-            else:
-                code_sublist_count = 0
-                last_start += 1
-                # Need to keep last_start up to date in case we hit this condition and need to
-                # set the shopping cart index.
-                shopping_cart_index = last_start
-    return LOSER
+        # If we did not find a match for this sublist, return LOSER
+        if not match_found:
+            return LOSER
+        shopping_cart_index = shopping_cart_index + len(code_sublist)
+        # print("The new shopping cart index is: %d" % shopping_cart_index)
+    return WINNER
 
 
 if __name__ == '__main__':
     for i, input_values in enumerate(EXAMPLE_INPUTS):
         print("+"*40, i, "+"*40)
-        result = non_regex_fresh_promotion_check(input_values['codeList'], input_values['shoppingCart'])
+        result = fresh_promotion_check(input_values['codeList'], input_values['shoppingCart'])
         # result = fresh_promotion_check(input_values['codeList'], input_values['shoppingCart'])
-        print("The result of %d from:" % result)
-        print("    code list: %s" %  input_values['codeList'])
-        print("shopping cart: %s was correct" % input_values['shoppingCart'])
+        # print("The result of %d from:" % result)
+        # print("    code list: %s" %  input_values['codeList'])
+        # print("shopping cart: %s was correct" % input_values['shoppingCart'])
         assert result == EXPECTED_RESULTS[i]
         print("Correct result of %d from" % result)
         print("    code list: %s" % input_values['codeList'])
