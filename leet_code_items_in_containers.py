@@ -106,14 +106,14 @@ def count_items(items_string: str) -> int:
 
 # Time complexity: O(mn) where m is the number of indices and n is the number of elements
 # Space complexity: O(1)
-def numberOfItems(compartment_string: str, startIndices: List[int], endIndices: List[int]) -> List[int]:
-    if len(startIndices) != len(endIndices):
+def numberOfItems(compartment_string: str, start_indices: List[int], end_indices: List[int]) -> List[int]:
+    if len(start_indices) != len(end_indices):
         raise ValueError("Invalid input for start and end indices, lengths are not equal")
 
     counts = []
     if compartment_string:
-        for i in range(len(startIndices)):
-            counts.append(count_items(compartment_string[startIndices[i] - 1:endIndices[i]]))
+        for i in range(len(start_indices)):
+            counts.append(count_items(compartment_string[start_indices[i] - 1:end_indices[i]]))
     return counts
 
 
