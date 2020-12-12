@@ -12,14 +12,17 @@ Example 1:
 
 Input: "()"
 Output: 1
+
 Example 2:
 
 Input: "(())"
 Output: 2
+
 Example 3:
 
 Input: "()()"
 Output: 2
+
 Example 4:
 
 Input: "(()(()))"
@@ -62,9 +65,9 @@ def scoreOfParentheses_iterative(string_in: str) -> int:
     for i in range(len(string_in)):
         k += 1 if string_in[i] == "(" else -1
         if string_in[i - 1:i + 1] == "()":
-            print("Exponential 2 ** %d = %d" % (k, 2 ** k))
+            # print("Exponential 2 ** %d = %d" % (k, 2 ** k))
             ans += 2 ** k
-        print("Current value of ans: %d" % ans)
+        # print("Current value of ans: %d" % ans)
     return ans
 
 INPUT_STRINGS = [
