@@ -199,7 +199,8 @@ def fresh_promotion_check(code_list: List[List[str]], shopping_cart: List[str]) 
     # print("Incoming data is:")
     # print("    code_list: %s" % code_list)
     # print("shopping_cart: %s" % shopping_cart)
-    # Start with the shopping_cart_index = 0
+    # Start with the shopping_cart_index = 0, we will move the "window" along the shopping
+    # cart checking each code sublist against the current "window" on the shopping cart.
     shopping_cart_index = 0
     # Go through each code_list sublist
     for code_sublist in code_list:
@@ -208,16 +209,20 @@ def fresh_promotion_check(code_list: List[List[str]], shopping_cart: List[str]) 
         if shopping_cart_index >= len(shopping_cart):
             return LOSER
         # print("Working on code_sublist: %s" % code_sublist)
-        # Initialize the list of wildcard indices
-        wildcard_indices = []
         # Set match_found to False initially
         match_found = False
+        # Initialize the list of wildcard indices. We use a list in case there is more than one
+        # wildcard in a sublist.
+        wildcard_indices = []
+        # If we have any wildcards in the sublist, then figure out where they are
         if code_sublist.count(WILDCARD):
             for find_wildcards_index in range(len(code_sublist)):
                 if code_sublist[find_wildcards_index] == WILDCARD:
                     wildcard_indices.append(find_wildcards_index)
         # print("The wildcard indices are: %s" % wildcard_indices)
         while shopping_cart_index < len(shopping_cart):
+            # Substitute the wildcards in the sublist with the values from the shopping cart
+            # at those indices in this particular "window" of the shopping cart
             for wildcard_index in wildcard_indices:
                 code_sublist[wildcard_index] = \
                     shopping_cart[shopping_cart_index:shopping_cart_index + len(code_sublist)][wildcard_index]
@@ -231,6 +236,7 @@ def fresh_promotion_check(code_list: List[List[str]], shopping_cart: List[str]) 
         # If we did not find a match for this sublist, return LOSER
         if not match_found:
             return LOSER
+        # Move the shopping cart window past the current match
         shopping_cart_index = shopping_cart_index + len(code_sublist)
         # print("The new shopping cart index is: %d" % shopping_cart_index)
     return WINNER
