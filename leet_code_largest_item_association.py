@@ -68,6 +68,8 @@ EXPECTED_RESULTS = [
 ]
 
 
+# We build a graph and then do a breadth first search, so the time complexity is O(n) where n is
+# the number of items in the input because we have to go through every item at least once.
 def largest_item_association(associations: List[List[str]]):
     item_map = defaultdict(set)
 
@@ -75,35 +77,40 @@ def largest_item_association(associations: List[List[str]]):
         item_map[item_pair[0]].add(item_pair[1])
         item_map[item_pair[1]].add(item_pair[0])
 
-    print("The item map is:")
-    pprint(item_map)
+    # print("The item map is:")
+    # pprint(item_map)
+    # Set up the largest group and visited set.
     largest_group = []
     visited = set()
 
     for key, val in item_map.items():
-        print("Working on key: %s val: %s" % (key,val))
+        # print("Working on key: %s val: %s" % (key,val))
         if key not in visited:
-            print("key (%s) has not been visited" % key)
+            # print("key (%s) has not been visited" % key)
             current_group = []
             queue = deque()
-            queue.append(key)
-            print("Starting while queue loop")
+            queue.append(key)           # Add the current key to the queue
+            # print("Starting while queue loop")
             while queue:
-                print("The queue is: %s" % queue)
+                # print("The queue is: %s" % queue)
                 current = queue.popleft()
-                print("current (just popped left from queue) is: %s" % current)
+                # print("current (just popped left from queue) is: %s" % current)
+                # Make sure we don't visit this element again, and add it to the current
+                # group.
                 visited.add(current)
                 current_group.append(current)
-                print("current_group: %s" % current_group)
+                # print("current_group: %s" % current_group)
+                # If there are neighbors, then add them to the queue
                 for neighbor in item_map[current]:
                     if neighbor not in visited:
-                        print("Visiting neighbor: %s" % neighbor)
+                        # print("Visiting neighbor: %s" % neighbor)
                         queue.append(neighbor)
-            print("At end of while loop, checking if current group is larger")
+            # print("At end of while loop, checking if current group is larger")
+            # If the current group is larger than the current largest_group, replace it
             if len(current_group) > len(largest_group):
                 largest_group = current_group.copy()
-        else:
-            print("key %s has already been visited" % key)
+        # else:
+            # print("key %s has already been visited" % key)
 
     largest_group.sort()
     return largest_group
