@@ -19,6 +19,9 @@ Return the minimum difficulty of a job schedule. If you cannot find a schedule f
 
 Example 1:
 
+Day 1: 6, 5, 4, 3, 2
+Day 2: 1
+
 Input: jobDifficulty = [6,5,4,3,2,1], d = 2
 Output: 7
 
