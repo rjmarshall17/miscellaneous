@@ -68,7 +68,7 @@ def memoize(func):
     def inner(*args):
         if (args,) not in memo:
             memo[(args,)] = func(*args)
-        # print("%s returning: %s args: %s" % (func.__name__, memo[(args,)], (*args,)))
+        print("%s returning: %s args: %s" % (func.__name__, memo[(args,)], (*args,)))
         return memo[(args,)]
     return inner
 
@@ -87,6 +87,7 @@ def minimum_difficulty(job_difficulty: List[int], days: int) -> int:
 
     @memoize
     def array_max(start: int, end: int):
+        print("job_difficulty[%d:%d]=%s" % (start, end, job_difficulty[start:end]))
         return max(job_difficulty[start:end])
 
     @memoize
@@ -113,10 +114,10 @@ def minimum_difficulty(job_difficulty: List[int], days: int) -> int:
 
 EXAMPLE_INPUT = [
     [[6, 5, 4, 3, 2, 1], 2],
-    [[9, 9, 9], 4],
-    [[1, 1, 1], 3],
-    [[7, 1, 7, 1, 7, 1], 3],
-    [[11, 111, 22, 222, 33, 333, 44, 444], 6],
+    # [[9, 9, 9], 4],
+    # [[1, 1, 1], 3],
+    # [[7, 1, 7, 1, 7, 1], 3],
+    # [[11, 111, 22, 222, 33, 333, 44, 444], 6],
 ]
 
 
