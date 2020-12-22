@@ -76,6 +76,8 @@ class ListNode:
             return False
         return True
 
+# The time complexity for this is O(n) because we need to
+# go through the entire linked list.
 def get_number(list_node: ListNode) -> int:
     number = ''
     current = list_node
@@ -86,6 +88,9 @@ def get_number(list_node: ListNode) -> int:
     # print("get_number returning: %d" % int(number))
     return int(number)
 
+# The time complexity here is O(a+b+c) because we have three linked lists
+# that all need to be either read or created. The conversion of the integer
+# to a string is an O(n) operation as well with space being O(n)
 def add_two_numbers(l1: ListNode, l2: ListNode) -> ListNode:
     number1 = get_number(l1)
     number2 = get_number(l2)
@@ -104,6 +109,7 @@ def add_two_numbers(l1: ListNode, l2: ListNode) -> ListNode:
     # print("Add two numbers returning: %s" % return_list)
     return return_list
 
+# This is an O(n) operation and O(n) for space as well.
 def build_list_node(nums: List[int]) -> ListNode:
     current = None
     return_ln = None
