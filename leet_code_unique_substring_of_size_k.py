@@ -44,50 +44,27 @@ def print_numbered_array(array):
     
     
 def generate_substr(string_in: str, size_k: int) -> List[str]:
-    # If there is no string incoming, or the size is set to 0,
-    # simply return an empty list
-    if not string_in or size_k == 0:
-        return []
-
-    print_numbered_array(string_in)
-
-    # Set up the result set which will prevent adding duplicate
-    # substrings to the return value
+    # Starting with the incoming string and an integer value that will determine
+    # the size of the strings to return. We will need to loop through the string,
+    # check if we've seen this character before. If we have we will need to update
+    # the start of substring value to just pass the last time we saw this character.
+    # We need to be sure that we don't move the start backwards, so only move it
+    # past the last time, plus 1, that we saw a character if it is less or equal
+    # to the last time we saw that character.
+    # If we have found a substring of the correct length, then add it to the result
+    # and move the start pointer over 1.
     results = set()
-
-    # Get the length of the string
-    string_in_length = len(string_in)
-    # Set up a dictionary to track seen characters to ensure that we don't
-    # have substrings with duplicates.
     seen = {}
-    # Set up a start value which will be the beginning of the substring we
-    # are currently checking
     start = 0
-    # Go through the string. The goal is to add every substring that does
-    # not contain duplicate characters to the results.
-    for index in range(string_in_length):
-        # Check if we have a duplicate character
-        if string_in[index] in seen:
-            # If we do, move the start past the previous character
-            print("start=%d seen['%s']=%d" % (start, string_in[index], seen[string_in[index]]))
-            if start < seen[string_in[index]]:
-                start = seen[string_in[index]] + 1
-                print("Moving start to: %d" % start)
-        # Update the last time we saw this particular character
-        seen[string_in[index]] = index
-
-        # Check if the current substring is of the size we want
-        if index - start == size_k:
-            # The substring would be of the correct length, add
-            # it to the result set.
-            results.add(string_in[start:index])
-            # Bump the start index so that we will start to examine the next
-            # potentially valid substring
+    string_in_len = len(string_in)
+    for i in range(string_in_len):
+        if string_in[i] in seen:
+            if start <= seen[string_in[i]]:
+                start = seen[string_in[i]] + 1
+        seen[string_in[i]] = i
+        if (i + 1) - start == size_k:
+            results.add(string_in[start:i + 1])
             start += 1
-    # We've exited the loop, is there a current valid substring?
-    if index - start == size_k:
-        results.add(string_in[start:index])
-    # Convert the result set to a list and return it
     return list(results)
 
 EXAMPLE_INPUTS = [
@@ -108,7 +85,9 @@ if __name__ == '__main__':
         if i:
             print('='*80)
         results = generate_substr(input_data[0], input_data[1])
-        output = "The results (%s) {} match the expected results: %s" % (sorted(results),
-                                                                         sorted(EXPECTED_RESULTS[i]))
-        assert sorted(results) == sorted(EXPECTED_RESULTS[i]), output.format("did not")
-        print(output.format("did"))
+        error_output = "The results (%s) did not match the expected results: %s" %\
+                       (sorted(results),sorted(EXPECTED_RESULTS[i]))
+        assert sorted(results) == sorted(EXPECTED_RESULTS[i]), error_output
+        print("The results matched the expected results:")
+        print('%s' % sorted(results))
+        print('%s' % sorted(EXPECTED_RESULTS[i]))
