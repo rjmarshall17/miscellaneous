@@ -95,15 +95,22 @@ def longest_palindrome(string_in: str) -> str:
 
 
 def reset_pos(left, center, right, adj_right):
+    print('1 reset_pos: left=%d center=%d right=%d adj_right=%d' %
+          (left, center, right, adj_right))
     """If ctr unmoved, set to adj_right. Mirror left around ctr."""
     if (left + right) / 2 == center:
         center = adj_right
     left = center - (right - center)
+
+    print('2 reset_pos: left=%d center=%d right=%d adj_right=%d' %
+          (left, center, right, adj_right))
     return left, center, right
 
 def expand_linear(center, right, adj_right, palindrome_lengths):
     """Expand as much as possible using 3-case "mirror" principle of algo."""
 
+    print('-'*80)
+    print("expand_linear: center=%d right=%d adj_right=%d" % (center,right,adj_right))
     for i in range(1, right - center):
         dist_to_edge = adj_right - (center + i)
 
@@ -116,7 +123,18 @@ def expand_linear(center, right, adj_right, palindrome_lengths):
             center += i
             break
 
+    print("expand_linear palindrome_lengths:")
+    print_numbered_array(palindrome_lengths)
     return center, palindrome_lengths
+
+def print_numbered_array(array):
+    l = len(array)
+    for i in range(l):
+        print(" %d " % i, end='')
+    print()
+    for i in range(l):
+        print(" %s " % array[i], end='')
+    print()
 
 # Manacher algorithm
 # Got this from: https://github.com/tkuriyama/puzzles/tree/master/palindrome
@@ -135,13 +153,24 @@ def manacher_palindromes(string_in: str) -> str:
     if len(string_in) < 2:
         return string_in
 
+    # If the incoming string is already a palindrome, just return it
+    if string_in == string_in[::-1]:
+        return string_in
+
     delimiter = '#'
     # First we transform the incoming string to have hash marks, '#', in between
     # each letter at the even positions, i.e. 0, 2, 4...
     new_string = delimiter + delimiter.join(string_in) + delimiter
     new_string_length = len(new_string)
+    print("manacher_palindrome:")
+    print_numbered_array(new_string)
+
     palindrome_lengths = [0] * new_string_length
+    # We start with everything, left, center and right, all set to 1
     left, center, right = 1, 1, 1
+    # We set the left_edge to 1 (because 0 is a delimiter) and the right_edge
+    # to the length of the delimited string - 2 (because the end character is
+    # a delimiter.
     left_edge, right_edge = 1, new_string_length - 2
 
     while right <= right_edge:
@@ -154,11 +183,15 @@ def manacher_palindromes(string_in: str) -> str:
             #                                                                 new_string[right]))
             if new_string[right] != delimiter:
                 palindrome_lengths[center] += 1 if left == right else 2
-                # print("Adding %d to palindrome_lengths[center=%d]=%d" % (1 if left == right else 2,
-                #                                                          center,
-                #                                                          palindrome_lengths[center]))
+                print("center=%d left=%d left_edge=%d right=%d right_edge=%d nsl=%s nsr=%s" %
+                      (center, left, left_edge, right, right_edge, new_string[left], new_string[right]))
+                print("Adding %d to palindrome_lengths[center=%d]=%d" % (1 if left == right else 2,
+                                                                         center,
+                                                                         palindrome_lengths[center]))
+                print_numbered_array(palindrome_lengths)
             left, right = left - 1, right + 1
         adjusted_right = right - 1 if palindrome_lengths[center] > 0 and left > 0 else right
+        print("left=%d right=%d adjusted_right=%d" % (left, right, adjusted_right))
 
         # expand using linear algo and reset position indices
         center, palindrome_lengths = expand_linear(center, right, adjusted_right, palindrome_lengths)
@@ -203,16 +236,18 @@ if __name__ == '__main__':
         if i:
             print('-'*80)
         input_data = input_data.translate(translate_table).lower()
-        result = brute_force_longest_palindrome(input_data)
-        result2 = longest_palindrome(input_data)
+        print("input_data=%s" % input_data)
+        # result = brute_force_longest_palindrome(input_data)
+        # result2 = longest_palindrome(input_data)
         result3 = manacher_palindromes(input_data)
-        print("Brute force result=%s center out index result2=%s Manacher algorithm result3=%s" % (result,
-                                                                                                   result2,
-                                                                                                   result3))
-        output = "The result (%s) for %s {} match the expected result: %s" % (result,
-                                                                              input_data,
-                                                                              EXPECTED_RESULTS[i])
-        assert result in EXPECTED_RESULTS[i], output.format("does not (1)")
-        assert result2 in EXPECTED_RESULTS[i], output.format("does not (2)")
-        assert result3 in EXPECTED_RESULTS[i], output.format("does not (3)")
-        print(output.format("does"))
+        print("result3=%s" % result3)
+        # print("Brute force result=%s center out index result2=%s Manacher algorithm result3=%s" % (result,
+        #                                                                                            result2,
+        #                                                                                            result3))
+        # output = "The result (%s) for %s {} match the expected result: %s" % (result,
+        #                                                                       input_data,
+        #                                                                       EXPECTED_RESULTS[i])
+        # assert result in EXPECTED_RESULTS[i], output.format("does not (1)")
+        # assert result2 in EXPECTED_RESULTS[i], output.format("does not (2)")
+        # assert result3 in EXPECTED_RESULTS[i], output.format("does not (3)")
+        # print(output.format("does"))
