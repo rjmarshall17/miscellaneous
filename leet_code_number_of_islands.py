@@ -61,6 +61,7 @@ def number_of_islands_iterative(grid: List[List[str]]) -> int:
         for col in range(cols):
             if grid[row][col] == '1':
                 number_of_islands += 1
+                # print("{0} number of islands: {1} {0}".format('-'*30,number_of_islands))
                 replace_with_water_iterative(grid, rows, cols, row, col)
     return number_of_islands
 
@@ -75,18 +76,25 @@ def replace_with_water_iterative(grid: List[List[str]], rows: int, cols: int, ro
     # Replace the land with water at that position
     grid[row][col] = '0'
     while queue:
+        # Grab the row and col from the queue
         row, col = queue.popleft()
+        # We set up CHECK_DIRECTIONS to make it easier to go through the four
+        # directions, up, down, left and right, that we need to check for more
+        # land for this current island.
         for direction in CHECK_DIRECTIONS:
             check_row = row + direction[0]
             check_col = col + direction[1]
             if ((check_row > -1 and check_row < rows) and
                     (check_col > -1 and check_col < cols) and
                     (grid[check_row][check_col] == '1')):
+                # If the current check_row and check_col are in the grid and are
+                # land, then we need to add this location to the queue and set it
+                # to water, i.e. '0'
                 queue.append((check_row, check_col))
                 grid[check_row][check_col] = '0'
     # print("The current grid:")
     # print_grid(grid)
-
+        
 
 EXAMPLE_INPUTS = [
     [
@@ -123,6 +131,8 @@ EXPECTED_RESULTS = [
 
 if __name__ == '__main__':
     for i, input_data in enumerate(EXAMPLE_INPUTS):
+        # if i:
+        #     print("="*80)
         result = number_of_islands_iterative(input_data)
         output = "The result (%d) {} match the expected result: %d" % (result,
                                                                        EXPECTED_RESULTS[i])
