@@ -2,6 +2,7 @@
 
 from typing import List
 from collections import deque
+from copy import deepcopy
 
 """
 200. Number of Islands
@@ -54,6 +55,9 @@ def print_grid(grid: List[List[str]]):
 
 
 def number_of_islands_iterative(grid: List[List[str]]) -> int:
+    if not grid:
+        return 0
+
     number_of_islands = 0
     rows = len(grid)
     cols = len(grid[0])
@@ -94,7 +98,35 @@ def replace_with_water_iterative(grid: List[List[str]], rows: int, cols: int, ro
                 grid[check_row][check_col] = '0'
     # print("The current grid:")
     # print_grid(grid)
-        
+
+
+def number_of_islands_recursive(grid: List[List[str]]) -> int:
+    if not grid:
+        return 0
+
+    # print("recursive got grid:")
+    # print_grid(grid)
+    number_of_islands = 0
+    for row in range(len(grid)):
+        for col in range(len(grid[0])):
+            if grid[row][col] == '1':
+                number_of_islands += 1
+                # print("{0} number of islands: {1} {0}".format('-'*30,number_of_islands))
+                replace_with_water_recursive(grid, row, col)
+    return number_of_islands
+
+
+# Called recursively to replace any land with water. Need to ensure that the grid coordinates
+# are valid and that the value is a '1', if not just return.
+def replace_with_water_recursive(grid, row, col):
+    if row < 0 or col < 0 or row >= len(grid) or col >= len(grid[0]) or grid[row][col] != '1':
+        return
+    grid[row][col] = '0'
+    for direction in CHECK_DIRECTIONS:
+        replace_with_water_recursive(grid,
+                                     row + direction[0],
+                                     col + direction[1])
+
 
 EXAMPLE_INPUTS = [
     [
@@ -133,8 +165,15 @@ if __name__ == '__main__':
     for i, input_data in enumerate(EXAMPLE_INPUTS):
         # if i:
         #     print("="*80)
-        result = number_of_islands_iterative(input_data)
-        output = "The result (%d) {} match the expected result: %d" % (result,
-                                                                       EXPECTED_RESULTS[i])
-        assert result == EXPECTED_RESULTS[i], output.format("did not")
-        print(output.format("did"))
+        islands_grid = deepcopy(input_data)
+        result_iterative = number_of_islands_iterative(islands_grid)
+        output = "The {} result (%d) {} match the expected result: %d" % (result_iterative,
+                                                                          EXPECTED_RESULTS[i])
+        assert result_iterative == EXPECTED_RESULTS[i], output.format("iterative", "did not")
+        print(output.format("iterative", "did"))
+        islands_grid = deepcopy(input_data)
+        result_recursive = number_of_islands_recursive(islands_grid)
+        output = "The {} result (%d) {} match the expected result: %d" % (result_recursive,
+                                                                          EXPECTED_RESULTS[i])
+        assert result_recursive == EXPECTED_RESULTS[i], output.format("recursive", "did not")
+        print(output.format("iterative", "did"))
