@@ -125,10 +125,8 @@ def manacher_palindromes(string_in: str) -> str:
         return string_in
 
     # First we transform the incoming string to have hash marks, '#', in between
-    # each letter at the even positions, i.e. 0, 2, 4... We also add non-matching
-    # characters to the very beginning and end so that we don't have to do any
-    # boundary checking. The delimiter can be any character that is NOT in the
-    # incoming string.
+    # each letter at the even positions, i.e. 0, 2, 4... The delimiter can be any
+    # character that is NOT in the incoming string.
     delimiter = '#'
     new_string = delimiter + delimiter.join(string_in) + delimiter
     # print_numbered_array(new_string)
@@ -154,7 +152,8 @@ def manacher_palindromes(string_in: str) -> str:
         if index + palindrome_lengths[index] > right:
             center = index
             right = 1 + palindrome_lengths[index]
-    # print_numbered_array(palindrome_lengths)
+    print_numbered_array(new_string)
+    print_numbered_array(palindrome_lengths)
     longest = max(palindrome_lengths)
     # We need to subtract 1 here because of the initial character
     # that was added to the string.
@@ -170,7 +169,8 @@ EXAMPLE_INPUTS = [
     'a',
     'ac',
     'racecarfred',
-    'FA nut for a jar of tuna.G'
+    'FA nut for a jar of tuna.G',
+    'baddad'
 ]
 
 EXPECTED_RESULTS = [
@@ -180,6 +180,7 @@ EXPECTED_RESULTS = [
     ['a', 'c'],
     ['racecar'],
     ['anutforajaroftuna'],
+    ['adda'],
 ]
 
 
