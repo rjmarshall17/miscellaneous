@@ -1,1 +1,62 @@
-The start of the miscellaneous pseudocode file.
+Hacker Rank Balanced Brackets:
+------------------------------
+
+Create a dictionary for matching parentheses, i.e. brackets.
+    The key is the closing bracket the value is the opening bracket.
+Is balanced function parameter the string containing the brackets
+    parentheses <- empty list, will be used as a stack
+    Loop through each character of the string
+        If the character is in the values of the matching parentheses dictionary
+            append it to the stack
+        else if the character is one of the keys
+            if there are no characters on the stack
+                return False
+            if the last character on the stack does not match the expected character from the matching parentheses
+                return False
+            pop the last item from the stack
+    if there are still characters on the stack
+        return False
+    return True
+
+Hacker Rank Running Median:
+---------------------------
+
+This challenge makes use of a max and a min heap. The max heap will be used to hold the lower half of the
+integers provided. Because it's a max heap, we use the heap from heapq and negate all of the values, the
+first value will be the largest of the lower half of the provided values. The min heap will hold the upper
+half of the provided integers such that the first value will be the smallest of the upper half. The heaps
+will need to be kept balanced with no more than 1 extra value on each heap at any time.
+
+add number function parameters: number to add, max heap, min heap
+    if there is no max heap or number < -max heap[0]
+        heap push the number onto the max heap
+    else
+        heap push the number onto the min heap
+
+balance heaps function parameters: max heap, min heap
+    if length of min heap - length of max heap >= 2
+        heap push onto max heap the negative heap pop from min heap
+    if length of max heap - length of min heap >= 2
+        heap push onto min heap the negative heap pop from max heap
+
+get median function parameters: max heap, min heap
+    if length of heaps are equal
+        return min heap[0] + max heap[0] / 2
+    else if length of min heap > length of max heap
+        return float of min heap[0]
+    return float of negated max heap[0]
+
+running median function parameter incoming array of integers
+    results <- empty list
+    max heap <- empty list
+    min heap <- empty list
+    loop through array of integers
+        call add number with current number, max heap, min heap
+        call balance heaps with max heap and min heap
+        append to results return from call to get median with max heap and min heap
+    return results
+
+In Flight Movies:
+-----------------
+
+
