@@ -59,4 +59,31 @@ running median function parameter incoming array of integers
 In Flight Movies:
 -----------------
 
+This challenge is about finding the movies that, when watched together, come closest to the length of
+the flight minus 30 minutes.
+
+add up all movies iterative function parameters: list of movie durations
+    return set <- empty set
+    loop from 0 to length of list of movie durations
+        loop from outer loop index + 1 to length of list of movie durations
+            add tuple duration at index outer loop + duration at index of inner loop
+                duration at index of outer loop
+                duration at index of inner loop
+    return list of return set
+
+add up all movies recursive function parameters: first index, list of movie durations, return list
+    if a first index is larger then the list of movie durations
+        return the return list provided
+    loop index in range first index + 1 to length of list of movie durations
+        append to return list tuple:
+            duration at first index + duration at second index
+            duration at first index
+            duration at second index
+    call add up all movies recursive with first index + 1, list of movie durations, return list
+
+Leet Code Accounts Merge:
+-------------------------
+
+The input is a list of lists where element 0 in each list is a username and the remaining elements are
+email addresses belonging to the user name.
 
