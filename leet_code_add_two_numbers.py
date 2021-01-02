@@ -45,6 +45,7 @@ The number of nodes in each linked list is in the range [1, 100].
 It is guaranteed that the list represents a number that does not have leading zeros.
 """
 
+
 # Definition for singly-linked list.
 class ListNode:
     def __init__(self, val=0, next=None):
@@ -76,6 +77,7 @@ class ListNode:
             return False
         return True
 
+
 # The time complexity for this is O(n) because we need to
 # go through the entire linked list.
 def get_number(list_node: ListNode) -> int:
@@ -87,6 +89,7 @@ def get_number(list_node: ListNode) -> int:
     number = number[::-1]
     # print("get_number returning: %d" % int(number))
     return int(number)
+
 
 # The time complexity here is O(a+b+c) because we have three linked lists
 # that all need to be either read or created. The conversion of the integer
@@ -109,11 +112,12 @@ def add_two_numbers(l1: ListNode, l2: ListNode) -> ListNode:
     # print("Add two numbers returning: %s" % return_list)
     return return_list
 
+
 # This is an O(n) operation and O(n) for space as well.
 def build_list_node(nums: List[int]) -> ListNode:
     current = None
     return_ln = None
-    for number in reversed(nums):
+    for number in nums[::-1]:
         if current is None:
             current = ListNode(number)
             return_ln = current
@@ -123,9 +127,10 @@ def build_list_node(nums: List[int]) -> ListNode:
             current = current.next
     return return_ln
 
+
 EXAMPLE_INPUTS = [
-    [build_list_node([3, 4, 2]),
-     build_list_node([4, 6, 5])],
+    [build_list_node([int(x) for x in str(342)]),
+     build_list_node([int(x) for x in str(465)])],
     [build_list_node([0]),
      build_list_node([0])],
     [build_list_node([9]*7),
@@ -133,9 +138,9 @@ EXAMPLE_INPUTS = [
 ]
 
 EXPECTED_RESULTS = [
-    build_list_node([8,0,7]),
+    build_list_node([int(x) for x in str(807)]),
     build_list_node([0]),
-    build_list_node([1, 0, 0, 0, 9, 9, 9, 8]),
+    build_list_node([int(x) for x in str(10009998)]),
 ]
 
 

@@ -49,6 +49,11 @@ class UnionFind:
     def __init__(self, number):
         self.ids = list(range(number))
 
+    def __str__(self):
+        ret = ' '.join(map(str,range(len(self.ids))))
+        ret += '\n'
+        return ret + ' '.join(map(str, self.ids))
+
     def find(self, index):
         while index != self.ids[index]:
             self.ids[index] = self.ids[self.ids[index]]
@@ -70,10 +75,11 @@ def merge_accounts(accounts: List[List[str]]) -> List[List[str]]:
 
     # Set up unique integer IDs for each email
     email_to_ids = {email: index for index, email in enumerate(email_to_name.keys())}
-
+    # pprint(email_to_ids)
     # Create the union find which will union all emails for the same account
     uf = UnionFind(len(email_to_ids))
     # pprint(accounts)
+    # print("The union find is initially:\n%s" % uf)
     for account in accounts:
         for email in account[2:]:
             uf.union(email_to_ids[account[1]], email_to_ids[email])
@@ -82,6 +88,7 @@ def merge_accounts(accounts: List[List[str]]) -> List[List[str]]:
     for email in email_to_name:
         users[uf.find(email_to_ids[email])].append(email)
     # pprint(users)
+    # print("The union find is now:\n%s" % uf)
 
     # Create the return value by adding the name to the sorted list
     # of email addresses.

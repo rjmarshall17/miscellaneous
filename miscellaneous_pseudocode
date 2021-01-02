@@ -85,5 +85,119 @@ Leet Code Accounts Merge:
 -------------------------
 
 The input is a list of lists where element 0 in each list is a username and the remaining elements are
-email addresses belonging to the user name.
+email addresses belonging to the user name. The goal is to combine all emails, even if the username may
+be the same or different for multiple users. The idea is that the email is the determining factor.
+
+Union Find Class:
+    __init__ function parameters: self, number of expected vertices
+        self ids <- list of values from 0 to number of expected vertices - 1
+
+    find function parameters: Index for which to find the parent, i.e. the set to which this index belongs
+        loop while index != self .ids[index]
+            self .ids[index] <- self .ids[self .ids[index]]  # This is where path compression is implemented
+            index <- self .ids[index]
+        return index
+
+    union function parameters: first index, second index
+        first, second <- self .find(first), self .find(second)
+        self .ids[first] <- self .ids[second]
+
+merge accounts function parameters: list of list of accounts and emails
+    email to name <- dict()
+    loop over accounts
+        name <- accounts at first index
+        loop over account emails, i.e. account starting at second index to end of emails
+            email to name [email] <- name
+
+    Create list of unique IDs for each email
+        email to ids <- dictionary with key set to email and value to unique index
+        # e.g.: {email: index for index, email in enumerate(email_to_name.keys())}
+
+    Create the union find with number set to length of the keys for email to ids
+    Loop through accounts
+        loop through emails for each account starting at index 2
+            union find union account email at index 1 with email
+
+    Create users <- defaultdict(list)
+    Loop through email in email to name dictionary
+        append email to users at ID from union find find(emails to ids[email])
+
+    Create merge result <- empty list
+    Loop through users dictionary values, i.e. emails
+        append to merge result list of email to name [emails[0]] + sorted(emails)
+    return merge result
+
+Leet Code Add Two Numbers:
+--------------------------
+
+The input will be two linked lists each representing a non-negative number, with no leading zeroes except
+the value 0 itself, in reverse order, i.e. 123 will be represented as: 3->2->1. Add the two number and
+return them as a reverse order linked list.
+
+class ListNode
+    __init__ parameters: self, value, next <- None
+        self .value = value
+        self .next = next
+
+    __str__ parameters: self
+        current <- self
+        output <- empty string, e.g. ""
+        loop while current is not None
+            if length of the output > 0
+                output += "->"
+            output += str(self .value)
+            current <- current.next
+        return output
+
+    __eq__ parameters: self, other ListNode
+        current1 <- self
+        current2 <- other
+        loop while current1 is not None
+            if current1 .value != current2 .value
+                return False
+            current1 <- current1 .next
+            current2 <- current2 .next
+            if current2 is None
+                if current 1 is not None
+                    return False
+        if current2 is not None
+            return False
+        return True
+
+get number helper function parameters: ListNode
+    number <- empty string, e.g. ""
+    current <- ListNode
+    loop while current is not None
+        number += str(current .value)
+        current <- current .next
+    reverse the number string, e.g. number <- number[::-1]
+    return int(number)
+
+build list helper function parameters: numbers to convert to ListNode in an array
+    current <- None
+    return_ln <- None
+    loop for each number in reversed numbers list
+        if current is None
+            current <- ListNode number
+            return_ln <- current
+        else
+            ln <- ListNode  number
+            current .next <- ln
+            current <- current .next
+    return return_ln
+
+add two numbers function parameters: ListNode1, ListNode2
+    number1 <- get number ListNode1
+    number2 <- get number ListNode2
+    total <- number1 + number2
+    current = None
+    loop through the reversed string of total, e.g. str(total)[::-1]
+        if current is None
+            current <- ListNode integer of current number
+            return list node <- current # Set the return to be the first member of the linked list
+        else
+            list node <- ListNode integer of current number
+            current .next <- list node
+            current <- current .next
+    return return list node
 
