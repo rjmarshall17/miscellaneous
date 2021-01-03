@@ -15,7 +15,7 @@ to the customers regarding the items they can purchase. Based on historical cust
 information, an item association can be defined as:
 
     if an item A is ordered by a customer, then item B is also likely to be ordered
-    by the same customer (e.g. Book 1 in frequently ordered with Book 2).
+    by the same customer (e.g. Book 1 is frequently ordered with Book 2).
 
 All items that are linked together by an item association can be considered to be in the same
 group. An item without any association to any other item can be considered to be in its own

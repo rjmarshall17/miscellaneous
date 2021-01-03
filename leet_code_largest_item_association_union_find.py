@@ -68,13 +68,17 @@ def largest_item_association(associations: List[List[str]]) -> List:
     for items in associations:
         uf.union(items_to_id[items[0]],items_to_id[items[1]])
 
-    print(uf.union_find)
+    # print('Items to id:\n%s' % items_to_id)
+    # print(uf.union_find)
     ret = []
+    # The UnionFind most_members returns the parent with the most members.
+    most_members = int(uf.most_members)
     for item in sorted_items:
-        if uf.find(items_to_id[item]) in uf.max_members:
+        if int(uf.find(items_to_id[item])) == most_members:
             ret.append(item)
 
     return ret
+
 
 EXAMPLE_INPUT = [
     [

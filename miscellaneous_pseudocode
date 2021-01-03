@@ -270,3 +270,164 @@ Five Star Reviews function parameters: list of list of ratings, float threshold
         Calculate the current percentage, i.e.:
         current_percentage = (sum([x[0] / x[1] for x in product_ratings]) / len(product_ratings)) * 100
     return add five star count
+
+Leet Code Fresh Promotion:
+--------------------------
+
+This challenge is about a secret promotion being run that, if the customer purchases items in the
+promotion, they win a prize. There is a wildcard in the secret items, the string "anything".
+
+fresh promotion check function parameters: list of list of strings for promotion, list for shopping cart
+    shopping cart index <- 0
+    loop through secret promotions list setting sublist to the next combination of products
+        if shopping cart index >= length of shopping cart
+            return LOSER (0)
+        match found <- False
+        wildcard indices <- empty list
+        if wildcards are in the sublist
+            loop through the sublist
+                if the code sublist at index is a wildcard
+                    append index to wildcard indices
+        loop while shopping cart index < length of the shopping cart
+            for wildcard index in wildcard indices
+                modify the sublist to replace the wildcard index with whatever is in the shopping cart at that index:
+                code_sublist[wildcard_index] = \
+                    shopping_cart[shopping_cart_index:shopping_cart_index + len(code_sublist)][wildcard_index]
+            if sublist == shopping cart starting at shopping cart index for length of sublist
+                match found <- True
+                exit while loop, i.e. break
+            shopping cart index += 1
+        if match found is False
+            return LOSER (0)
+        shopping cart index <- shopping cart index + length of matched sublist
+    return WINNER (1)
+
+Leet Code Items in Container:
+-----------------------------
+
+This challenge involves counting the number of items, each '*' character, that is in a container, i.e. between
+two '|' characters.
+
+count items helper function parameters: the items string
+    count <- 0
+    total count <- 0
+    add item <- False
+    for character in items string
+        if character == '|'
+            if add item is False
+                add item <- True
+            total count += count
+            count <- 0
+            continue
+        if character == '*' and add item is True
+            count += 1
+    return total count
+
+number of items function parameters: compartment string, start indices list, end indices list
+    if length of start indices != length of end indices
+        raise ValueError
+    counts <- empty list
+    if there is a compartment string
+        for index in range of the length of the start indices
+            append output from count items to counts, i.e.:
+                counts.append(count_items(compartment_string[start_indices[i] - 1:end_indices[i]]))
+    return counts list
+
+Alternate method using rfind:
+count items rfind helper function parameters: the items string
+    return the count of items, each '*', between the first and last '|', i.e.:
+        return items_string[items_string.find('|'):items_string.rfind('|')].count('*')
+
+number of items rfind function parameters: compartment string, start indices list, end indices list
+    if length of start indices != length of the end indices
+        raise ValueError
+    counts <- empty list
+    if there is a compartment string
+        for index in range of the length of the start indices
+            append output from count items rfind helper to counts, i.e.
+                counts.append(rfind_count_items(compartment_string[start_indices[i] - 1:end_indices[i]]))
+    return counts
+
+Leet Code Largest Item Association:
+-----------------------------------
+
+The idea of this challenge is that certain items are usually purchased together with other items. The
+input to the function is a list of lists of items that area associated with each other. Each list of
+items is a pair of items. The goal is to find the largest item association from the provided associations.
+Return a list of strings representing the largest item association group, sorted lexicographically.
+
+For example:
+
+Input:
+    itemAssociation
+    [[item1, item2],
+    [item3, item4],
+    [item4, item5]]
+
+Output:
+    [item3, item4, item5]
+
+Explanation:
+    There are two item association groups:
+    group1: [item1, item2]
+    group2: [item3, item4, item5]
+    In the available item associations, group2 has the largest association.
+    So the output is: [item3, item4, item5]
+
+
+largest item association function parameters: associations list of list of string
+    item map <- default dictionary of set
+    for item pair in associations
+        item map [item pair[0]] add item pair[1]
+        item map [item pair[1]] add item pair[0]
+    largest group <- empty list
+    visited <- set - could also just be a list
+    loop through the item map with keys and values
+        if key not in visited
+            current group <- empty list
+            queue <- deque
+            append key to queue
+            while there are still keys in the queue
+                current <- queue popleft
+                add key to visited
+                append current to current group
+                loop through each neighbor in the item map for current
+                    if neighbor is not in visited
+                        append neighbor to queue
+            if current group length is > current largest group length
+                largest group <- current group
+    return sorted largest group
+
+An alternative way to do this is with a union find. In this case the UnionFind has a most_members property
+that determines which parent has the most members. The current implementation is:
+
+    @property
+    def most_members(self):
+        """
+        This function will return the parent with the most members.
+        """
+        most_members = -1
+        for parent in set(self.union_find):
+            if most_members < 0:
+                most_members = parent
+            if self.union_find.count(parent) > self.union_find.count(most_members):
+                most_members = parent
+        return most_members
+
+largest item association function parameters: associations list of list of string
+    sort and flatten the incoming associations, i.e.:
+        sorted_items = sorted(set([item for sublist in associations for item in sublist]))
+    create a map of items to a unique ID, i.e.:
+        items_to_id = {sorted_items[index]: index for index in range(len(sorted_items))}
+    uf <- UnionFind(length of sorted items)
+    for items in associations
+        uf .union items[0] items[1]
+    return list <- empty list
+    most members <- uf .most_members   # Returns the ID of the parent with the most members
+    for item in sorted items
+        if uf .find item by ID == most members
+            append item to return list
+    return the return list
+
+
+
