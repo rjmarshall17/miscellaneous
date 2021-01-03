@@ -85,6 +85,7 @@ EXPECTED_RESULTS = [
     [[2, 1]],
 ]
 
+
 def optimal_flight_path(max_travel_distance, forward_route_list, return_route_list):
     # If we don't have either a forward_route_list and/or a return_route_list, return
     # an empty list. Check for a constraint the may make this test unnecessary.
