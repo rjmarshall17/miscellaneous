@@ -69,6 +69,7 @@ def number_of_islands_iterative(grid: List[List[str]]) -> int:
                 replace_with_water_iterative(grid, rows, cols, row, col)
     return number_of_islands
 
+
 def replace_with_water_iterative(grid: List[List[str]], rows: int, cols: int, row: int, col: int):
     # Set up a queue to track land we find while checking around the incoming
     # row/col.
@@ -88,8 +89,13 @@ def replace_with_water_iterative(grid: List[List[str]], rows: int, cols: int, ro
         for direction in CHECK_DIRECTIONS:
             check_row = row + direction[0]
             check_col = col + direction[1]
-            if ((check_row > -1 and check_row < rows) and
-                    (check_col > -1 and check_col < cols) and
+
+            # if ((check_row > -1 and check_row < rows) and
+            #         (check_col > -1 and check_col < cols) and
+            #         (grid[check_row][check_col] == '1')):
+
+            if ((-1 < check_row < rows) and
+                    (-1 < check_col < cols) and
                     (grid[check_row][check_col] == '1')):
                 # If the current check_row and check_col are in the grid and are
                 # land, then we need to add this location to the queue and set it
@@ -176,4 +182,4 @@ if __name__ == '__main__':
         output = "The {} result (%d) {} match the expected result: %d" % (result_recursive,
                                                                           EXPECTED_RESULTS[i])
         assert result_recursive == EXPECTED_RESULTS[i], output.format("recursive", "did not")
-        print(output.format("iterative", "did"))
+        print(output.format("recursive", "did"))

@@ -674,6 +674,79 @@ most common word function parameters: paragraph string, list of banned words
             skip this word, i.e. continue
         return word
 
+Leet Code Number of Islands:
+----------------------------
+Given an m x n 2d grid map of '1's (land) and '0's (water), return the number of islands.
 
+An island is surrounded by water and is formed by connecting adjacent lands horizontally or
+vertically. You may assume all four edges of the grid are all surrounded by water.
 
+Example 1:
+
+Input: grid = [
+  ["1","1","1","1","0"],
+  ["1","1","0","1","0"],
+  ["1","1","0","0","0"],
+  ["0","0","0","0","0"]
+]
+
+Output: 1
+
+The idea is: Once you find an island, convert all of the land to water so that you don't accidentally count
+it again as an island.
+
+CHECK DIRECTIONS <- list [
+    (1, 0),             # Up
+    (-1, 0),            # Down
+    (0, 1),             # Right
+    (0, -1),            # Left
+]
+
+replace with water iterative helper function parameters: grid, rows, cols, row, col
+    queue <- deque()
+    append row, col to queue
+    grid [row][col] = '0'       # i.e. replace land with water
+    loop while we have items in the queue
+        row, col <- pop from queue
+        for direction in CHECK DIRECTIONS
+            check row <- row + direction[0]
+            check col <- col + direction[1]
+            if -1 < check row < rows and
+                            -1 < check col < cols and
+                            grid[check row][check col] == '1'
+                append to queue check row, check col
+                grid[check row][check col] = '0'        # i.e. replace land with water
+
+number of islands iterative function parameters: grid a list of lists of string
+    if there is no grid
+        return 0
+    number of islands <- 0
+    rows <- length of grid
+    cols <- length of grid [0]
+    for row index in range of number of rows
+        for col index in range of number of cols
+            if grid[row][col] == '1':
+                number of islands += 1
+                call replace with water iterative with grid, rows, cols, row, col
+    return number of islands
+
+This can also be done recursively:
+
+replace with water recursive helper function parameters: grid, row, col
+    if row < 0 or col < 0 or row >= length of grid or col >= length of grid[0] or grid[row][col] != '1'
+        return
+    grid[row][col] = '0'
+    for direction in CHECK DIRECTIONS
+        call replace with water recursive with grid, row + direction[0], col + direction[1]
+
+number of islands recursive function parameters: grid of list of lists of string
+    if there is no grid
+        return 0
+    number of islands = 0
+    for row in range length of grid
+        for col in range length of grid[0]
+            if grid[row][col] == '1'
+                number of islands += 1
+                call replace with water recursive with grid, row, col
+    return number of islands
 
