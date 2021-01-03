@@ -474,10 +474,10 @@ version that uses a left and right pointer is O(n**2). There is also the Manache
 i.e. O(n).
 
 brute force function parameters: string to check
-    if string to check == string to check reversed, i.e. [::-1]
-        return string to check
     if length of string to check <= 2
         return string to check index 0
+    if string to check == string to check reversed, i.e. [::-1]
+        return string to check
     bf longest palindrome <- ''
     for index in length of string to check
         for index2 in index + 1 to length of string to check
@@ -486,7 +486,67 @@ brute force function parameters: string to check
                     bf longest palindrome <- string to check [index:index2]
     return bf longest palindrome
 
+================
+pointers version
 
+get longest palindrome from helper function parameters: string to check, left index, right index
+    loop while left index >= 0 and right index < length of the string to check
+        if string to check [left index] != string to check [right index]
+            exit loop, break
+        left index -= 1
+        right index += 1
+    return left index + 1, right index
+
+longest palindrome function parameters: string to check
+    if the length of the string to check is <= 2
+        return the first character of the string to check
+    if string to check is a palindrome
+        return string to check
+    current longest <- [0,1]
+    for index in range 1 to length of string to check
+        odd <- call get longest palindrome from with index - 1, index + 1
+        even <- call get longest palindrome from with index - 1, index
+        longest <- max of odd even, i.e.:
+             longest = max(odd, even, key=lambda x: x[1] - x[0])
+        current longest <- max of longest and current longest, i.e.:
+            current_longest = max(longest, current_longest, key=lambda x: x[1] - x[0])
+    return string to check [current longest [0] : current longest [1]]
+
+====================
+Manacher's algorithm
+
+The advantage of Manacher's algorithm is that it can find the longest palindrome in linear, i.e. O(n)
+time.
+
+manacher palindromes function parameters: string to check
+    if length of string to check <= 2
+        return the first character of the string to check
+    if string to check is already a palindrome
+        return string to check
+    delimiter <- '#' - i.e. some character that is NOT in the string we are checking
+    new string <- delimiter + delimiter.join(string to check) + delimiter
+    new string length <- length of new string
+    palindrome lengths <- [0] * new string length
+    center <- 0
+    right <- 0
+    for index in range new string length
+        mirror <- 2 * center + 1
+        if index < right
+            palindrome lengths [index] <- minimum of right - 1 or palindrome lengths [mirror]
+        loop while index + 1 + palindrome lengths [index] < new string length and
+            new string [index + (1 + palindrome lengths [index])] ==
+            new string [index + (1 - palindrome lengths [index])]
+            palindrome lengths [index] += 1
+        if index + palindrome lengths [index] > right
+            center <- index
+            right <- 1 + palindrome lengths [index]
+    longest <- max palindrome lengths
+    center <- palindrome lengths .index(longest) // 2
+    half word <- longest // 2
+    start <- center - half word
+    end <- center + half word
+    add 0 to end if the longest % 2 == 0 else add 1
+    return string to check [start:end]
 
 
 
