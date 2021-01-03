@@ -44,27 +44,36 @@ s consist of only digits and English letters (lower-case and/or upper-case),
 # We assume that the incoming string will not have any spaces or
 # punctuation marks, just numbers and letters.
 def brute_force_longest_palindrome(string_in: str) -> str:
-    if len(string_in) == 1:
+    # If the entire string is a palindrome, return it
+    # I may not need to do lower()
+    if string_in.lower() == string_in.lower()[::-1]:
         return string_in
+    # Handle the special case where either the length of the string is 1 or 2. Return the first
+    # character in the string.
+    if len(string_in) <= 2:
+        return string_in[0]
+
+    # I may not need to do lower()
     string_to_check = string_in.lower()
-    longest_palindrome = ''
+    bf_longest_palindrome = ''
     for index in range(len(string_to_check)):
         for index2 in range(index+1,len(string_to_check) + 1):
             # print("index=%d index2=%d" % (index, index2))
             if string_to_check[index:index2] == string_to_check[index:index2][::-1]:
-                if index2 - index > len(longest_palindrome):
-                    longest_palindrome = string_to_check[index:index2]
-                    # print("Current longest palindrome: %s" % longest_palindrome)
-    return longest_palindrome
+                if index2 - index > len(bf_longest_palindrome):
+                    bf_longest_palindrome = string_to_check[index:index2]
+                    # print("Current longest palindrome: %s" % bf_longest_palindrome)
+    return bf_longest_palindrome
 
 
-def getLongestPalindromeFrom(string,leftIdx,rightIdx):
-	while leftIdx >= 0 and rightIdx < len(string):
-		if string[leftIdx] != string[rightIdx]:
-			break
-		leftIdx -= 1
-		rightIdx += 1
-	return [leftIdx + 1, rightIdx]
+def getLongestPalindromeFrom(string_in, leftIdx_in, rightIdx_in):
+    while leftIdx_in >= 0 and rightIdx_in < len(string_in):
+        if string[leftIdx_in] != string[rightIdx_in]:
+            break
+        leftIdx_in -= 1
+        rightIdx_in += 1
+    return [leftIdx_in + 1, rightIdx_in]
+
 
 # The time complexity for this is: O(n^2). It's better than the brute
 # force method, but it's still not great.
@@ -81,17 +90,17 @@ def longest_palindrome(string_in: str) -> str:
     if len(string_in) == 2:
         return string_in[0]
 
-    currentLongest = [0, 1]
+    current_longest = [0, 1]
     for i in range(1, len(string_in)):
         odd = getLongestPalindromeFrom(string_in, i - 1, i + 1)
         even = getLongestPalindromeFrom(string_in, i - 1, i)
         longest = max(odd, even, key=lambda x: x[1] - x[0])
-        currentLongest = max(longest, currentLongest, key=lambda x: x[1] - x[0])
-        # print("odd=%s even=%s longest=%s currentLongest=%s" % (odd,
+        current_longest = max(longest, current_longest, key=lambda x: x[1] - x[0])
+        # print("odd=%s even=%s longest=%s current_longest=%s" % (odd,
         #                                                        even,
         #                                                        longest,
-        #                                                        currentLongest))
-    return string_in[currentLongest[0]:currentLongest[1]]
+        #                                                        current_longest))
+    return string_in[current_longest[0]:current_longest[1]]
 
 
 def print_numbered_array(array):
@@ -102,6 +111,7 @@ def print_numbered_array(array):
     for i in range(l):
         print('{:^5}'.format(str(array[i])), end='')
     print()
+
 
 # Manacher algorithm
 # This is based on the pseudo code at: https://seedbx.com/understanding-manachers-algorithm/

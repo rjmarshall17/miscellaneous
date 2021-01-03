@@ -41,6 +41,7 @@ Constraints:
 s consists of English letters, digits, symbols and spaces.
 """
 
+
 # The time complexity of this function is O(n) where n is the length
 # of the incoming string. The space complexity is O(min(n,a)) where
 # n is the length of the incoming string and a is the list of unique
@@ -58,7 +59,12 @@ def length_of_longest_substring(string_in: str) -> int:
         if current_char in last_seen:
             start_index = max(start_index, last_seen[current_char] + 1)
             # print("start=%d" % start)
-        # print("longest[1] (%d) - longest[0] (%d) = %d i (%d) + 1 - start(%d) = %d" % (longest[1],longest[0], longest[1]-longest[0],i,start,i+1-start))
+        # print("longest[1] (%d) - longest[0] (%d) = %d i (%d) + 1 - start(%d) = %d" % (longest[1],
+        #                                                                               longest[0],
+        #                                                                               longest[1]-longest[0],
+        #                                                                               i,
+        #                                                                               start_index,
+        #                                                                               i+1-start_index))
         if longest[1] - longest[0] < string_index + 1 - start_index:
             longest = [start_index, string_index + 1]
         last_seen[current_char] = string_index

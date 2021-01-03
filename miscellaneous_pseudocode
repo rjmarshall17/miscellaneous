@@ -429,5 +429,64 @@ largest item association function parameters: associations list of list of strin
             append item to return list
     return the return list
 
+Leet Code Longest Non-repeating String:
+---------------------------------------
+
+Given a string s, find the length of the longest substring without repeating characters.
+
+Example 1:
+
+Input: s = "abcabcbb"
+Output: 3
+
+Explanation: The answer is "abc", with the length of 3.
+
+length of longest substring function parameters: string to check
+    if length of string to check is 0
+        return 0
+    start index <- 0
+    last seen <- empty dictionary
+    longest <- [0,1]    # The start and end indices of the longest non-repeating string
+    for string index, current character in enumerated string to check
+        if current character in last seen
+            start index <- maximum of start index or last seen [current character] + 1
+        if longest[1] - longest[0] < string index + 1 - start index
+            longest <- [start index, string index + 1]
+        last seen [current character] <- string index
+    return longest[1] - longest[0]
+
+Leet Code Longest Palindromic String:
+-------------------------------------
+
+Given a string s, return the longest palindromic substring in s.
+
+Example 1:
+
+Input: s = "babad"
+Output: "bab"
+
+Note: "aba" is also a valid answer.
+
+Assumptions: There are no spaces in the string, it is only characters a-z0-9 and that they are in lower case.
+
+There are multiple ways to solve this challenge. The brute force solution has a time complexity of O(n**3). The
+version that uses a left and right pointer is O(n**2). There is also the Manacher algorithm which is linear time,
+i.e. O(n).
+
+brute force function parameters: string to check
+    if string to check == string to check reversed, i.e. [::-1]
+        return string to check
+    if length of string to check <= 2
+        return string to check index 0
+    bf longest palindrome <- ''
+    for index in length of string to check
+        for index2 in index + 1 to length of string to check
+            if string to check [index:index2] == string to check [index:index2][::-1]
+                if index2 - index > length of bf longest palindrome
+                    bf longest palindrome <- string to check [index:index2]
+    return bf longest palindrome
+
+
+
 
 
