@@ -818,5 +818,25 @@ There are only three combinations: [1,1], [2,1], and [3,1], which have a total o
 not exceed 7,000 [2,1] is the only optimal pair.
 
 optimal flight path function parameters: maximum travel distance, forward route list, return route list
+    if no forward route list or no return route list
+        return empty list
+    if maximum travel distance <= 0
+        return empty list
+    best distance <- empty list     # Format: index 0 is the distance index 1 list of to/from routes
+    loop through forward route list and return route list creating a list with distance and forward
+        route number and return route number, i.e.:
+            for distance, to from route in [[frl[1] + rrl[1], [frl[0], rrl[0]]]
+                                            for frl in forward route list
+                                            for rrl in return rout list]
+        if distance <= maximum travel distance
+            if there is a best distance
+                if distance == best distance[0]
+                    append routes to best distance[1]
+                if distance > best distance[0]
+                    best distance <- [distance, [to from route]]
+            else
+                best distance <- [distance, [to from route]]
+    return best distance[1]
+
 
 

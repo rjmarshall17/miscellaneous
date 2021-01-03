@@ -127,4 +127,4 @@ if __name__ == '__main__':
     for i, input_data in enumerate(EXAMPLE_INPUT):
         results = optimal_flight_path(input_data[0], input_data[1], input_data[2])
         assert results == EXPECTED_RESULTS[i]
-        print("The results for input %d matchted the expected results: %s" % (i,results))
+        print("The results for input %d matched the expected results: %s" % (i,results))
