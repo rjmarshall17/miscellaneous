@@ -1071,6 +1071,38 @@ two sums function parameters: nums list of ints, target
         remainders[number] <- index
     return []
 
+Leet Code Unique Substring of Size k:
+-------------------------------------
+Given a string s and an int k, return all unique substrings of s of size k with k distinct characters.
+
+Example 1:
+
+Input: s = "abcabc", k = 3
+Output: ["abc", "bca", "cab"]
+
+Starting with the incoming string and an integer value that will determine the size of the strings to
+return. We will need to loop through the string, check if we've seen this character before. If we have
+we will need to update the start of substring value to just pass the last time we saw this character.
+We need to be sure that we don't move the start backwards, so only move it past the last time, plus 1,
+that we saw a character if it is less or equal to the last time we saw that character.
+
+If we have found a substring of the correct length, then add it to the result and move the start
+pointer over 1.
+
+generate substrings function parameters: string, size k
+    results <- empty set
+    seen <- empty dictionary
+    start <- 0
+    string length <- length of string
+    for index in range string length
+        if string[index] in seen:
+            if start <= seen[string[index]]
+                start <- seen[string[index]] + 1
+        seen[string[index]] <- index
+        if (index + 1) - start == k
+            results.add(string[start:index + 1]
+            start += 1
+    return list of results
 
 
 
