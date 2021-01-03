@@ -563,7 +563,82 @@ median of arrays function parameters: array one, array two
         return both arrays [index] + both arrays [index + 1] / 2
     return both arrays [length of both arrays // 2]     # i.e. the length is odd, return the middle value
 
+Leet Code Minimum Difficulty Job Schedule:
+------------------------------------------
+You want to schedule a list of jobs in d days. Jobs are dependent (i.e To work on the i-th
+job, you have to finish all the jobs j where 0 <= j < i).
 
+You have to finish at least one task every day. The difficulty of a job schedule is the sum
+of difficulties of each day of the d days. The difficulty of a day is the maximum difficulty
+of a job done in that day.
+
+Given an array of integers jobDifficulty and an integer d. The difficulty of the i-th job is jobDifficulty[i].
+
+Return the minimum difficulty of a job schedule. If you cannot find a schedule for the jobs return -1.
+
+Example 1:
+
+Day 1: 6, 5, 4, 3, 2
+Day 2: 1
+
+Input: jobDifficulty = [6,5,4,3,2,1], d = 2
+Output: 7
+
+The approach is to set up functions inside the main function that will be called recursively. I also
+use either memoization or the functools lru_cache(maxsize=None) to cache the results so that we don't
+have to keep recalculating for values we've already seen.
+
+My memoize wrapper is:
+
+def memoize(func):
+    memo = {}
+
+    @wraps(func)
+    def inner(*args):
+        if (args,) not in memo:
+            memo[(args,)] = func(*args)
+        # print("%s returning: %s args: %s" % (func.__name__, memo[(args,)], (*args,)))
+        return memo[(args,)]
+    return inner
+
+In pseudocode:
+memoize
+    memo <- empty dictionary
+    @wraps(func)
+    inner parameters: *args
+        if (args,) not in memo:
+            memo [(args,)] = func(*args)
+        return memo[(args,0]
+    return inner
+
+minimum difficulty function parameters: list of integers for job difficulties, number of days
+    if length of the list of job difficulties < number of days
+        return -1   # Can't divide up fewer jobs than we have days
+    if length of the list of job difficulties == number of days
+        return the sum of the difficulties
+
+    @memoize or @lru_cache
+    array max function parameters: start index, end index
+        return the max from job difficulties [start:end]
+
+    @memoize of @lru_cache
+    recursion function parameters: previous, day
+        if day == 1
+            return result from call array max with previous and length of job difficulties
+        difficulty <- float('inf')
+        for index in range previous + 1, length of job difficulties - day + 2
+            current <- result from call to array max with previous, index +
+                result from call to recursion with index, day - 1
+            difficulty <- minimum of current, difficulty
+        return difficulty
+
+    res <- recursion(0, number of days)
+    if res == float('inf')
+        return -1
+    return res
+
+Leet Code Most Common Word:
+---------------------------
 
 
 

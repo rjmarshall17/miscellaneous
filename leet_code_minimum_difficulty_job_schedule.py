@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from functools import wraps
+from functools import wraps, lru_cache
 from typing import List
 
 """
@@ -64,11 +64,13 @@ Constraints:
 
 def memoize(func):
     memo = {}
+
     @wraps(func)
     def inner(*args):
         if (args,) not in memo:
             memo[(args,)] = func(*args)
-        print("%s returning: %s args: %s" % (func.__name__, memo[(args,)], (*args,)))
+            # print("Adding %s to memo with result: %s" % ((args,), memo[(args,)]))
+        # print("%s returning: %s args: %s" % (func.__name__, memo[(args,)], (*args,)))
         return memo[(args,)]
     return inner
 
@@ -86,13 +88,18 @@ def minimum_difficulty(job_difficulty: List[int], days: int) -> int:
         return sum(job_difficulty)
 
     @memoize
+    # @lru_cache(maxsize=None)
     def array_max(start: int, end: int):
-        print("job_difficulty[%d:%d]=%s" % (start, end, job_difficulty[start:end]))
+        # print("job_difficulty[%d:%d]=%s max=%s" % (start,
+        #                                            end,
+        #                                            job_difficulty[start:end],
+        #                                            max(job_difficulty[start:end])))
         return max(job_difficulty[start:end])
 
     @memoize
+    # @lru_cache(maxsize=None)
     def recursion(prev: int, day: int) -> int:
-        # if we come to the last day, we need to do all the follwing jobs
+        # if we come to the last day, we need to do all the following jobs
         if day == 1:
             return array_max(prev, len(job_difficulty))
         # else we check all the possibilities
@@ -108,16 +115,15 @@ def minimum_difficulty(job_difficulty: List[int], days: int) -> int:
     res = recursion(0, days)
     if res == float('inf'):
         return -1
-    else:
-        return res
+    return res
 
 
 EXAMPLE_INPUT = [
     [[6, 5, 4, 3, 2, 1], 2],
-    # [[9, 9, 9], 4],
-    # [[1, 1, 1], 3],
-    # [[7, 1, 7, 1, 7, 1], 3],
-    # [[11, 111, 22, 222, 33, 333, 44, 444], 6],
+    [[9, 9, 9], 4],
+    [[1, 1, 1], 3],
+    [[7, 1, 7, 1, 7, 1], 3],
+    [[11, 111, 22, 222, 33, 333, 44, 444], 6],
 ]
 
 
