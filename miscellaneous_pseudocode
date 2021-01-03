@@ -945,7 +945,104 @@ number of pairs divisible by 60 function parameters: list of times for songs
         remainders[time % 60] += 1
     return ret
 
+Leet Code Turnstile:
+--------------------
+A university has exactly one turnstile. It can be used either as an exit or an entrance. Unfortunately,
+sometimes many people want to pass through the turnstile and their directions can be different. The
+i-th person comes to the turnstile at time[i] and wants to either exit the university if direction[i] == 1
+or enter the university if direction[i] == 0. People form two queues, one to exit and one to enter.
+They are ordered by the time when they came to the turnstile and, if the times are equal, by their indices.
 
+If some person wants to enter the university and another person wants to leave the university at the
+same moment there are three cases:
+
+-   If in the previous second the turnstile was not used (maybe it was used before, but not at the
+    previous second), then the person who wants to leave goes first.
+-   If in the previous second the turnstile was used as an exit, then the person who wants to leave goes first.
+-   If in the previous second the turnstile was used as an entrance, then the person who wants to
+    enter goes first.
+
+Passing through the turnstile takes 1 second.
+
+For each person find the time when they will pass through the turnstile.
+
+Set up some variables
+
+EXITING = 1
+ENTERING = 0
+ENETERING_EXITING = ["Entering", "Exiting"]
+
+# The elements of the queue will be:
+TIME = 0
+DIRECTION = 1
+INDEX = 2
+
+I need to track the index of the person who is going through the turnstile based on when that
+person entered the queue to ensure the times are update correctly.
+
+NOTE: The "person" below consists of the time, direction and index for this "person"
+
+let person go helper function parameters: person1, person2, the queue, return times
+    return times [person1[INDEX]] <- person1[TIME]
+    person2[TIME] += 1
+    insert person2 onto head of queue
+
+NOTE: direction is either 0 for entering or 1 for exiting
+
+turnstile function parameters: times list of ints, directions list of ints
+    create the queue as a deque using the following:
+        deque([[times[i],directions[i], i] for i in range(len(times))])
+    return times <- [-1] * length of times
+    last direction <- 1         # We prefer exiting over entering
+    last used time <- -1
+    loop while we have a queue
+        current <- pop from queue
+        if current[TIME] <= last used
+            current[TIME] <- last used + 1
+        # The following happens when two people arrived at the same time
+        if there is a queue and current[TIME] == queue[0][TIME]
+            next person <- pop from queue
+            # if the turnstile has not been used or not used for at least 1 second
+            # then prefer the person exiting over the person entering
+            if last used < 0 or current[TIME] - last used > 1
+                if current[DIRECTION] == EXITING
+                    call let person go with: current, next person, the queue, the return times
+                    last used <- current[TIME]
+                    last direction <- EXITING
+                else if next person[DIRECTION] == EXITING
+                    call let person go with: next person, current, the queue, the return times
+                    last used <- next person[TIME]
+                    last direction <- EXITING
+                else
+                    # No one in the queue is exiting, just let current go
+                    call let person go with: current, next person, the queue, the return times
+                    last used <- current[TIME]
+                    last direction <- current[DIRECTION]
+            # OK, the turnstile has been used recently, prefer the current direction
+            else
+                # Unlike above, the direction for the first two cases is not changing
+                # so it will not need to be updated
+                if current[DIRECTION] == last direction
+                    call let person go with: current, next person, the queue, the return times
+                    last used <- current[TIME]
+                else if next person[DIRECTION] == last direction
+                    call let person go with: next person, current, the queue, the return times
+                    last used <- next person[TIME]
+                else
+                    # May be changing directions here, so update last direction
+                    call let person go with: current, next person, the queue, the return times
+                    last used <- current[TIME]
+                    last direction <- current[DIRECTION]
+        # This is the else for if times for current and next person are the same
+        # We are here because the times for current and next person are different
+        else
+            if current[TIME] == last used
+                return times[current[INDEX]] <- current[TIME] + 1
+            else
+                return times[current[INDEX]] <- current[TIME]
+            last direction <- current[DIRECTION]
+            last used <- current[TIME]
+    return return times
 
 
 
