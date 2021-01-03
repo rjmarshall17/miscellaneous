@@ -1,6 +1,5 @@
 Hacker Rank Balanced Brackets:
 ------------------------------
-
 Create a dictionary for matching parentheses, i.e. brackets.
     The key is the closing bracket the value is the opening bracket.
 Is balanced function parameter the string containing the brackets
@@ -20,7 +19,6 @@ Is balanced function parameter the string containing the brackets
 
 Hacker Rank Running Median:
 ---------------------------
-
 This challenge makes use of a max and a min heap. The max heap will be used to hold the lower half of the
 integers provided. Because it's a max heap, we use the heap from heapq and negate all of the values, the
 first value will be the largest of the lower half of the provided values. The min heap will hold the upper
@@ -58,7 +56,6 @@ running median function parameter incoming array of integers
 
 In Flight Movies:
 -----------------
-
 This challenge is about finding the movies that, when watched together, come closest to the length of
 the flight minus 30 minutes.
 
@@ -83,7 +80,6 @@ add up all movies recursive function parameters: first index, list of movie dura
 
 Leet Code Accounts Merge:
 -------------------------
-
 The input is a list of lists where element 0 in each list is a username and the remaining elements are
 email addresses belonging to the user name. The goal is to combine all emails, even if the username may
 be the same or different for multiple users. The idea is that the email is the determining factor.
@@ -129,7 +125,6 @@ merge accounts function parameters: list of list of accounts and emails
 
 Leet Code Add Two Numbers:
 --------------------------
-
 The input will be two linked lists each representing a non-negative number, with no leading zeroes except
 the value 0 itself, in reverse order, i.e. 123 will be represented as: 3->2->1. Add the two number and
 return them as a reverse order linked list.
@@ -203,7 +198,6 @@ add two numbers function parameters: ListNode1, ListNode2
 
 Leet Code Connect Ropes:
 ------------------------
-
 This challenge is to connect all of the segments of ropes, lengths provided in array of lengths, together
 two ropes at a time, using the smallest two ropes at each iteration. The cost for adding ropes is the sum
 of their lengths. For example assume an array of ropes of the following lengths: [8, 4, 6, 12]
@@ -233,7 +227,6 @@ connect ropes cost function parameters: list of rope lengths
 
 Leet Code Five Star Sellers:
 ----------------------------
-
 The idea behind this challenge is a hypothetical situation where sellers who sell on Amazon need to reach
 a certain threshold of 5 star ratings. If they are below the threshold, determine the number of 5 star
 ratings they would need to get in order to reach the threshold.
@@ -273,7 +266,6 @@ Five Star Reviews function parameters: list of list of ratings, float threshold
 
 Leet Code Fresh Promotion:
 --------------------------
-
 This challenge is about a secret promotion being run that, if the customer purchases items in the
 promotion, they win a prize. There is a wildcard in the secret items, the string "anything".
 
@@ -304,7 +296,6 @@ fresh promotion check function parameters: list of list of strings for promotion
 
 Leet Code Items in Container:
 -----------------------------
-
 This challenge involves counting the number of items, each '*' character, that is in a container, i.e. between
 two '|' characters.
 
@@ -350,7 +341,6 @@ number of items rfind function parameters: compartment string, start indices lis
 
 Leet Code Largest Item Association:
 -----------------------------------
-
 The idea of this challenge is that certain items are usually purchased together with other items. The
 input to the function is a list of lists of items that area associated with each other. Each list of
 items is a pair of items. The goal is to find the largest item association from the provided associations.
@@ -431,7 +421,6 @@ largest item association function parameters: associations list of list of strin
 
 Leet Code Longest Non-repeating String:
 ---------------------------------------
-
 Given a string s, find the length of the longest substring without repeating characters.
 
 Example 1:
@@ -457,7 +446,6 @@ length of longest substring function parameters: string to check
 
 Leet Code Longest Palindromic String:
 -------------------------------------
-
 Given a string s, return the longest palindromic substring in s.
 
 Example 1:
@@ -547,6 +535,35 @@ manacher palindromes function parameters: string to check
     end <- center + half word
     add 0 to end if the longest % 2 == 0 else add 1
     return string to check [start:end]
+
+Leet Code Median of Sorted Arrays:
+----------------------------------
+Given two sorted arrays nums1 and nums2 of size m and n respectively, return the median
+of the two sorted arrays.
+
+Follow up: The overall run time complexity should be O(log (m+n)).
+
+Example 1:
+
+Input: nums1 = [1,3], nums2 = [2]
+Output: 2.00000
+
+Explanation: merged array = [1,2,3] and median is 2.
+
+median of arrays function parameters: array one, array two
+    # The time complexity for the sort of the two arrays is: O(NlogN)
+    both arrays <- sorted(array one + array two)
+    if length of both arrays == 1
+        return both arrays [0]
+    if length of both arrays % 2 == 0   # i.e. the length is an even number
+        if length of both arrays == 2
+            return sum of both arrays divided by 2, i.e.:
+                return sum(both arrays)/2
+        index = length of both arrays - 1 // 2
+        return both arrays [index] + both arrays [index + 1] / 2
+    return both arrays [length of both arrays // 2]     # i.e. the length is odd, return the middle value
+
+
 
 
 
