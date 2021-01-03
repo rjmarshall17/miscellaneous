@@ -17,6 +17,7 @@ Explanation: Three pairs have a total duration divisible by 60:
 (time[0] = 30, time[2] = 150): total duration 180
 (time[1] = 20, time[3] = 100): total duration 120
 (time[1] = 20, time[4] = 40): total duration 60
+
 Example 2:
 
 Input: time = [60,60,60]
@@ -125,6 +126,9 @@ def numPairsDivisibleBy60(time: List[int]) -> int:
 
 if __name__ == '__main__':
     for i, input_data in enumerate(EXAMPLE_INPUTS):
+        result_bf = brute_force_numPairsDivisibleBy60(time=input_data)
+        assert result_bf == EXPECTED_RESULTS[i]
         result = numPairsDivisibleBy60(time=input_data)
         assert result == EXPECTED_RESULTS[i]
+        print("The brute force result of %d for %s is correct" % (result_bf, input_data))
         print("The result of %d for %s is correct" % (result, input_data))

@@ -874,5 +874,78 @@ reorder log files function parameters: list of logs
     return sorted letter logs based on the data followed by the ID + digit logs, i.e.:
         return sorted(letter_logs, key=lambda x: (x.split()[1:], x.split()[0])) + digit_logs
 
+Leet Code Song Pairs Divisible by 60:
+-------------------------------------
+You are given a list of songs where the ith song has a duration of time[i] seconds.
+
+Return the number of pairs of songs for which their total duration in seconds is divisible by 60.
+Formally, we want the number of indices i, j such that i < j with (time[i] + time[j]) % 60 == 0.
+
+Example 1:
+
+Input: time = [30,20,150,100,40]
+Output: 3
+Explanation: Three pairs have a total duration divisible by 60:
+(time[0] = 30, time[2] = 150): total duration 180
+(time[1] = 20, time[3] = 100): total duration 120
+(time[1] = 20, time[4] = 40): total duration 60
+
+Approach 1: Brute Force
+One of the most straightforward approaches would be iterating through the entire array using a nested loop
+to examine that, for each element a in time, whether there is another element b such that (a + b) % 60 == 0.
+Note that this approach might be too brutal to pass an interview.
+
+brute force number of pairs divisible by 60 function parameters: list of times for songs
+    ret <- 0
+    n <- length of list of times of songs
+    for index in range n
+        for index2 for range index + 1, n
+            increment ret if (time[index] + time[index2]) % 60 == 0, i.e.:
+                ret += (time[i] + time[j]) % 60 == 0
+    return ret
+
+Approach 2: Hashmap
+
+Intuition
+
+Let's dive deep into the condition (time[i] + time[j]) % 60 == 0 to examine the relation between
+time[i] and time[j]. Assuming that a and b are two elements in the input array time, we have:
+
+(a + b) % 60 == 0
+((a % 60) + (b % 60)) % 60 == 0
+
+Therefore, either:
+a % 60 == 0,
+            or (a % 60) + (b % 60) == 60
+b % 60 == 0,
+
+Hence, all we need would be finding the pairs of elements in time so they meet these conditions.
+
+Algorithm
+
+We would iterate through the input array time and for each element a, we want to know the number
+of elements b such that:
+
+1. b % 60 = 0, if a % 60=0
+2. b % 60 = 60 - a % 60, if a % 60 != 0
+
+We can use Approach 1 to implement this logic by repeatedly examining the rest of time again and again
+for each element a. However, we are able to improve the time complexity by consuming more space - we
+can store the frequencies of the remainder a % 60, so that we can find the number of the complements
+in O(1) time.
+
+number of pairs divisible by 60 function parameters: list of times for songs
+    remainders <- default dictionary of int
+    ret <- 0
+    for time in list of times for songs
+        if time % 60 == 0
+            ret += remainders[0]        # i.e. we add the number of songs that are divisible by 60
+        else
+            ret += remainders[60 - time % 60]
+        remainders[time % 60] += 1
+    return ret
+
+
+
 
 
