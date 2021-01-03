@@ -49,6 +49,7 @@ There are no hyphens or hyphenated words.
 Words only consist of letters, never apostrophes or other punctuation symbols.
 """
 
+
 # The time complexity is O(N + M) where N is the number of words in the paragraph
 # and M is the number of banned words. At this point I assume that maketrans has
 # a time complexity of O(X) where X is the number of characters being translated
@@ -63,6 +64,7 @@ def most_common_word(paragraph: str, banned: List[str]) -> str:
         if word in banned:
             continue
         return word
+
 
 EXAMPLE_INPUTS = [
     [
