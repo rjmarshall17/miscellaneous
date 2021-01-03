@@ -101,7 +101,7 @@ def five_star_reviews(ratings: List[List[int]], ratings_threshold: float) -> int
         add_stars += 1
         rating_index += 1
         current_percentage = (sum([x[0] / x[1] for x in product_ratings]) / len(product_ratings)) * 100
-        print("product_ratings are: %s current percentage: %s" % (product_ratings, current_percentage))
+        # print("product_ratings are: %s current percentage: %s" % (product_ratings, current_percentage))
     return add_stars
 
 

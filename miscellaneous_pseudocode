@@ -201,3 +201,72 @@ add two numbers function parameters: ListNode1, ListNode2
             current <- current .next
     return return list node
 
+Leet Code Connect Ropes:
+------------------------
+
+This challenge is to connect all of the segments of ropes, lengths provided in array of lengths, together
+two ropes at a time, using the smallest two ropes at each iteration. The cost for adding ropes is the sum
+of their lengths. For example assume an array of ropes of the following lengths: [8, 4, 6, 12]
+First add 4 and 6 for a cost of 10, the list of ropes would then be: [8, 10, 12]
+Next add 8 and 10 together for a cost of 18, the list of ropes would then be: [18, 12]
+Then connect the ropes of lengths 18 and 12 for a cost of 30
+The total cost of connecting the ropes is: 10 + 18 + 30 or 58
+
+In order to get the two shortest ropes in the best time, convert the incoming list of ropes to a minimum heap.
+
+connect ropes cost function parameters: list of rope lengths
+    total cost <- 0
+    if length of list of ropes > 0:
+        if length of list of ropes == 1
+            return ropes [0]
+        convert ropes into a heap
+        loop while the length of the ropes is > 0
+            if length of ropes > 1:
+                first cost <- heappop ropes
+                second cost <- heappop ropes
+                total cost += first cost + second cost
+                if we still have more ropes
+                    heappush ropes first cost + second cost
+            else
+                total cost += heappop ropes
+    return total cost
+
+Leet Code Five Star Sellers:
+----------------------------
+
+The idea behind this challenge is a hypothetical situation where sellers who sell on Amazon need to reach
+a certain threshold of 5 star ratings. If they are below the threshold, determine the number of 5 star
+ratings they would need to get in order to reach the threshold.
+
+The input is a list of lists of numbers where the first number is the current number of 5 star ratings
+and the second number is the total of ratings. After the lists of ratings will be a float for the
+threshold that this seller needs to reach. For example:
+
+([[4,4], [1,2], [3,6]], 0.77)
+
+Five Star Reviews function parameters: list of list of ratings, float threshold
+    Copy the incoming list of ratings to a local variable, i.e.:
+        product ratings <- deep copy of incoming list of ratings
+    add five star count <- 0
+    convert the ratings threshold to a percentage, i.e. multiply by 100 if it's < 1
+    calculate the current percentage for this customer, i.e.:
+        current percentage <- (sum([x[0] / x[1] for x in product_ratings]) / len(product_ratings)) * 100
+    check if any product ratings are tuples, if so convert them to lists
+    rating index <- 0
+    loop while the current percentage is less than the threshold
+        if rating index >= length of the product ratings
+            rating index <- 0       # Start over from beginning, we cycle through the ratings adding
+                                    # 5 star ratings where needed until we get to the threshold
+        # The following is how we check if the current product rating is all 5 star ratings
+        # In which case, skip this product rating
+        if product rating [rating index][0] / product rating [rating index][1] >= 1
+            rating index += 1
+            continue
+        # add a five start rating to this product's ratings
+        product rating [rating index][0] += 1
+        product rating [rating index][1] += 1
+        add five star count += 1
+        rating index += 1
+        Calculate the current percentage, i.e.:
+        current_percentage = (sum([x[0] / x[1] for x in product_ratings]) / len(product_ratings)) * 100
+    return add five star count
