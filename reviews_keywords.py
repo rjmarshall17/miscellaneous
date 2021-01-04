@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+from collections import defaultdict
+
 """
 Given a list of reviews, a list of keywords and an integer k. Find the most popular
 k keywords in order of most to least frequently mentioned. The comparison of strings
@@ -37,18 +39,17 @@ reviews = [
 
 # Time complexity: O(k*r)
 def get_keywords(number_of_keywords, keywords, reviews):
-    keyword_counts = {}
+    keyword_counts = defaultdict(int)
     for review in reviews:
         for keyword in keywords:
             if keyword.lower() in review.lower():
-                if keyword in keyword_counts:
-                    keyword_counts[keyword] += 1
-                else:
-                    keyword_counts[keyword] = 1
+                keyword_counts[keyword] += 1
     # Sorting the results and reversing it is most likely O(nlogn) at a minimum, but since I do both,
     # it may be considered to be O(2*nlogn) which is still O(nlogn), however the overall time complexity
     # is still O(k*r)
+    # print('keyword counts: %s' % keyword_counts)
     counts = list(reversed(sorted(sorted([(v, k) for k,v in keyword_counts.items()],key=lambda v: v[1]))))
+    # print("counts: %s" % counts)
     if len(counts) == number_of_keywords:
         return [x[1] for x in counts]
     return_counts = []

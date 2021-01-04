@@ -1104,6 +1104,35 @@ generate substrings function parameters: string, size k
             start += 1
     return list of results
 
+Reviews and Keywords:
+---------------------
+Given a list of reviews, a list of keywords and an integer k. Find the most popular
+k keywords in order of most to least frequently mentioned. The comparison of strings
+is case-insensitive.
+
+Multiple occurrences of a keyword in a review should be considered as a single mention.
+If keywords are mentioned an equal number of times in reviews, sort alphabetically.
+
+get keywords function parameters: number of keywords, keywords, reviews
+    keywords counts <- default dictionary of int
+    loop through reviews
+        loop through keywords
+            if keyword.lower() in review.lower()
+                keywords count[keyword] += 1
+    counts <- list of count and keyword sorted and reversed, i.e.
+        counts = list(reversed(sorted(sorted([(v, k) for k,v in keyword_counts.items()],key=lambda v: v[1]))))
+    if length of counts == number of keywords
+        return [x[1] for x in counts]   # i.e. return the keyword which is the second element
+    return counts <- empty list
+    for index in range length of counts - 1
+        if counts[index][0] > counts[index + 1][0]
+            append to return counts counts[index][1]
+        else if counts[index][0] == counts[index + 1][0]
+            extend the return counts by sorted list of keywords, i.e.:
+                return_counts.extend([x[1] for x in sorted([counts[index],counts[index+1]],key=lambda x: x[1])])
+        if length of the return counts >= number of keywords
+            exit the loop
+    return return counts [:number of keywords]
 
 
 
