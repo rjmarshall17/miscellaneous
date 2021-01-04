@@ -1171,4 +1171,95 @@ score of parentheses iterative parameters: string to check
             ans += 2 ** k
     return ans
 
+Unix Domain Socket Client:
+--------------------------
+This challenge tests your understanding of Sockets and Multi-Threaded programming.
+
+Your task is to write a UNIX Domain Socket(UDS) server which can accept connection from 'N' clients.
+Each client will send text data over the socket. Read the data and send it back to the client. The
+server should be Multi-Threaded and should service all clients in parallel.
+
+To support Multi-Threading you can use the POSIX thread library (C,C++) or the default threading library
+for other languages.
+
+Communication Protocol
+
+Read data from client and send the response back.
+String "END" marks end of communication from a client. Send response "END" and disconnect the client.
+
+Example request 1:
+
+Client 1:
+Hello World
+END
+Example response 1:
+
+Client 1:
+Hello World
+Example request 2:
+
+Client 2:
+This is line 1
+This is line 2
+END
+Example response 2:
+
+Client 2:
+This is line 1
+This is line 2
+
+The Unix Domain Socket, UDS, test is: the client will send a message to the server, the
+server will simply send the message back.
+
+The client code is:
+
+message <- '...'
+sock <- socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+server address <- "./.uds_socket"
+try:
+    sock.connect(server address)
+except socket.error as msg
+    print received socket error: msg
+    sys.exit(-1)
+try
+    sock.send_all(message)
+    amount received <- 0
+    amount expected <- length of message
+    loop while amount received < amount expected
+        data <- sock.recv(16)
+        amount received += length of data
+finally
+    sock.sendall(b'quit')
+    time.sleep(2)
+    sock.close()
+
+The server code is:
+server address <- './.uds_socket'
+try
+    os.unlink(server address)
+except OSError
+    if os.path.exists(server address)
+    raise
+loop <- get event loop from asyncio
+server <- socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+bind server to server address
+server listen
+set blocking on server to False
+async def handle client parameters: client
+    request = None
+    loop while the request is != 'quit']
+        request <- await loop sock.recv(client, 255) decode ('utf-8')
+        response <- string of request
+        try
+            await loop.sock_sendall(client, response.encode('utf-8'))
+        except broken pipe
+            break
+    close the client
+async def run server parameters: None
+    while True
+        client, _ <- await loop.sock_accept on server
+        loop.create_task(handle_client(client))
+
+main function
+    run until complete the event loop with run_server()
 
