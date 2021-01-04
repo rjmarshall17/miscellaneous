@@ -39,7 +39,7 @@ balance heaps function parameters: max heap, min heap
 
 get median function parameters: max heap, min heap
     if length of heaps are equal
-        return min heap[0] + max heap[0] / 2
+        return min heap[0] + negated max heap[0] / 2
     else if length of min heap > length of max heap
         return float of min heap[0]
     return float of negated max heap[0]
@@ -53,6 +53,38 @@ running median function parameter incoming array of integers
         call balance heaps with max heap and min heap
         append to results return from call to get median with max heap and min heap
     return results
+
+Hacker Rank Running Median Class:
+---------------------------------
+Create a running median class for handling the running median challenge. The max heap uses negative values
+in order to allow what is a min heap to function as a max heap. Here were are using heappush and heappop
+from heapq.
+
+class Running Median
+    __init__ method parameters: self
+        self.min_heap <- empty list
+        self.max_head <- empty list
+
+    add number method parameters: self, number to add
+        if self.max_heap is empty or number < -max_heap[0]
+            heappush number onto max heap
+        else
+            heappush number onto min heap
+        call self.__balance_heaps__
+
+    __balance_heaps__ method parameters: self
+        if length of min heap - length of max heap >= 2
+            heappush onto max heap negated value from heappop min heap
+        if length of max heap - length of the min heap >= 2
+            heappush onto min heap negated value from heappop max heap
+
+    median method parameters: self
+        if length of min heap == length of max heap
+            # Because the max heap has negative values, subtracting is actually adding
+            return min heap[0] - max heap[0] / 2
+        else if length of min heap > length of max heap
+            return float of min heap[0]
+        return float of -max heap[0]
 
 In Flight Movies:
 -----------------
