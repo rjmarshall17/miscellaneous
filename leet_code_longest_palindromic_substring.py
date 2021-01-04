@@ -44,15 +44,15 @@ s consist of only digits and English letters (lower-case and/or upper-case),
 # We assume that the incoming string will not have any spaces or
 # punctuation marks, just numbers and letters.
 def brute_force_longest_palindrome(string_in: str) -> str:
-    # Handle the special case where either the length of the string is 1 or 2. Return the first
-    # character in the string.
-    if len(string_in) <= 2:
-        return string_in[0]
-
     # If the entire string is a palindrome, return it
     # I may not need to do lower()
     if string_in.lower() == string_in.lower()[::-1]:
         return string_in
+
+    # Handle the special case where either the length of the string is 1 or 2. Return the first
+    # character in the string.
+    if len(string_in) <= 2:
+        return string_in[0]
 
     # I may not need to do lower()
     string_to_check = string_in.lower()
@@ -79,16 +79,16 @@ def getLongestPalindromeFrom(string_in, left_index_in, right_index_in):
 # The time complexity for this is: O(n^2). It's better than the brute
 # force method, but it's still not great.
 def longest_palindrome(string_in: str) -> str:
-    # If the incoming string is 2, or fewer, characters, return the first character
-    # in the string since that would be the longest palindrome at this point.
-    if len(string_in) <= 2:
-        return string_in[0]
-
     # Before doing anything else, check if the incoming string as a whole is
     # a palindrome and, if so, return it.
     # For the problem as described, all that would be necessary is: string_in.lower()
     if string_in == string_in[::-1]:
         return string_in
+
+    # If the incoming string is 2, or fewer, characters, return the first character
+    # in the string since that would be the longest palindrome at this point.
+    if len(string_in) <= 2:
+        return string_in[0]
 
     current_longest = [0, 1]
     for i in range(1, len(string_in)):
@@ -126,13 +126,13 @@ def print_numbered_array(array):
 # how Python concatenates strings. Some suggest using joins, but in a quick
 # timeit test I did the the joins, as opposed to '' + '', took slightly longer.
 def manacher_palindromes(string_in: str) -> str:
-    # If the length of the incoming string is less than 2, just return it
-    if len(string_in) <= 2:
-        return string_in[0]
-
     # If the incoming string is already a palindrome, just return it
     if string_in == string_in[::-1]:
         return string_in
+
+    # If the length of the incoming string is less than 2, just return index 0
+    if len(string_in) <= 2:
+        return string_in[0]
 
     # First we transform the incoming string to have hash marks, '#', in between
     # each letter at the even positions, i.e. 0, 2, 4... The delimiter can be any

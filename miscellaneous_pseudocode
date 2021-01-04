@@ -230,15 +230,7 @@ add two numbers function parameters: ListNode1, ListNode2
     number2 <- get number ListNode2
     total <- number1 + number2
     current = None
-    loop through the reversed string of total, e.g. str(total)[::-1]
-        if current is None
-            current <- ListNode integer of current number
-            return list node <- current # Set the return to be the first member of the linked list
-        else
-            list node <- ListNode integer of current number
-            current .next <- list node
-            current <- current .next
-    return return list node
+    return result from build list called with array of integers from total
 
 Leet Code Connect Ropes:
 ------------------------
@@ -347,22 +339,23 @@ count items helper function parameters: the items string
     count <- 0
     total count <- 0
     add item <- False
-    for character in items string
-        if character == '|'
-            if add item is False
-                add item <- True
-            total count += count
-            count <- 0
-            continue
-        if character == '*' and add item is True
-            count += 1
+    if count of compartment characters >= 2
+        for character in items string
+            if character == '|'
+                if add item is False
+                    add item <- True
+                total count += count
+                count <- 0
+                continue
+            if character == '*' and add item is True
+                count += 1
     return total count
 
 number of items function parameters: compartment string, start indices list, end indices list
     if length of start indices != length of end indices
         raise ValueError
     counts <- empty list
-    if there is a compartment string
+    if the number of compartment characters >= 2
         for index in range of the length of the start indices
             append output from count items to counts, i.e.:
                 counts.append(count_items(compartment_string[start_indices[i] - 1:end_indices[i]]))
@@ -370,6 +363,8 @@ number of items function parameters: compartment string, start indices list, end
 
 Alternate method using rfind:
 count items rfind helper function parameters: the items string
+    if count of compartment characters < 2:
+        return 0
     return the count of items, each '*', between the first and last '|', i.e.:
         return items_string[items_string.find('|'):items_string.rfind('|')].count('*')
 
@@ -377,7 +372,7 @@ number of items rfind function parameters: compartment string, start indices lis
     if length of start indices != length of the end indices
         raise ValueError
     counts <- empty list
-    if there is a compartment string
+    if there are two or more compartment characters in the string
         for index in range of the length of the start indices
             append output from count items rfind helper to counts, i.e.
                 counts.append(rfind_count_items(compartment_string[start_indices[i] - 1:end_indices[i]]))
@@ -407,7 +402,6 @@ Explanation:
     group2: [item3, item4, item5]
     In the available item associations, group2 has the largest association.
     So the output is: [item3, item4, item5]
-
 
 largest item association function parameters: associations list of list of string
     item map <- default dictionary of set
@@ -461,7 +455,7 @@ largest item association function parameters: associations list of list of strin
     for item in sorted items
         if uf .find item by ID == most members
             append item to return list
-    return the return list
+    return the sorted return list
 
 Leet Code Longest Non-repeating String:
 ---------------------------------------
@@ -506,10 +500,10 @@ version that uses a left and right pointer is O(n**2). There is also the Manache
 i.e. O(n).
 
 brute force function parameters: string to check
-    if length of string to check <= 2
-        return string to check index 0
     if string to check == string to check reversed, i.e. [::-1]
         return string to check
+    if length of string to check <= 2
+        return string to check index 0
     bf longest palindrome <- ''
     for index in length of string to check
         for index2 in index + 1 to length of string to check
@@ -530,10 +524,10 @@ get longest palindrome from helper function parameters: string to check, left in
     return left index + 1, right index
 
 longest palindrome function parameters: string to check
-    if the length of the string to check is <= 2
-        return the first character of the string to check
     if string to check is a palindrome
         return string to check
+    if the length of the string to check is <= 2
+        return the first character of the string to check
     current longest <- [0,1]
     for index in range 1 to length of string to check
         odd <- call get longest palindrome from with index - 1, index + 1
@@ -551,10 +545,10 @@ The advantage of Manacher's algorithm is that it can find the longest palindrome
 time.
 
 manacher palindromes function parameters: string to check
-    if length of string to check <= 2
-        return the first character of the string to check
     if string to check is already a palindrome
         return string to check
+    if length of string to check <= 2
+        return the first character of the string to check
     delimiter <- '#' - i.e. some character that is NOT in the string we are checking
     new string <- delimiter + delimiter.join(string to check) + delimiter
     new string length <- length of new string
@@ -566,8 +560,8 @@ manacher palindromes function parameters: string to check
         if index < right
             palindrome lengths [index] <- minimum of right - 1 or palindrome lengths [mirror]
         loop while index + 1 + palindrome lengths [index] < new string length and
-            new string [index + (1 + palindrome lengths [index])] ==
-            new string [index + (1 - palindrome lengths [index])]
+                new string [index + (1 + palindrome lengths [index])] ==
+                new string [index + (1 - palindrome lengths [index])]
             palindrome lengths [index] += 1
         if index + palindrome lengths [index] > right
             center <- index
@@ -652,7 +646,7 @@ memoize
     inner parameters: *args
         if (args,) not in memo:
             memo [(args,)] = func(*args)
-        return memo[(args,0]
+        return memo[(args,)]
     return inner
 
 minimum difficulty function parameters: list of integers for job difficulties, number of days
@@ -689,8 +683,6 @@ that the answer is unique.
 
 Words in the list of banned words are given in lowercase, and free of punctuation.  Words in
 the paragraph are not case sensitive.  The answer is in lowercase.
-
-
 
 Example:
 

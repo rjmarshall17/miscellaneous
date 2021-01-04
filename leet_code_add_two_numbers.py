@@ -100,17 +100,7 @@ def add_two_numbers(l1: ListNode, l2: ListNode) -> ListNode:
     # print("Number1=%d number2=%d" % (number1, number2))
     total = number1 + number2
     current = None
-    for number in str(total)[::-1]:
-        if current is None:
-            current = ListNode(int(number))
-            return_list = current
-        else:
-            ln = ListNode(int(number))
-            current.next = ln
-            current = current.next
-            
-    # print("Add two numbers returning: %s" % return_list)
-    return return_list
+    return build_list_node([int(x) for x in str(total)])
 
 
 # This is an O(n) operation and O(n) for space as well.
