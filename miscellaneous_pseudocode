@@ -1134,5 +1134,41 @@ get keywords function parameters: number of keywords, keywords, reviews
             exit the loop
     return return counts [:number of keywords]
 
+Score of Parentheses:
+---------------------
+Given a balanced parentheses string S, compute the score of the string based on the following rule:
+
+() has score 1
+AB has score A + B, where A and B are balanced parentheses strings.
+(A) has score 2 * A, where A is a balanced parentheses string.
+
+Example 1:
+
+Input: "()"
+Output: 1
+
+score of parentheses recursive parameters: string to check
+    inner function count parameters: i, j
+        ans = bal = 0
+        for k in range i, j
+            bal += 1 if string[k] == '('' else -1
+            if bal == 0             # have balanced parentheses
+                # if k - i == 1 have balanced parentheses one after the other
+                if k - i == 1
+                    ans += 1
+                else
+                    # The matching parens are not next to each other, check next substring
+                    ans += 2 * result from call to count with i + 1, k
+                i = k + 1
+        return ans
+    return result from call to count with 0, length of incoming string
+
+score of parentheses iterative parameters: string to check
+    ans = k = 0
+    for i in range length of string
+        k += 1 if string[i] == '(' else -1
+        if string[i - 1:i + 1] == '()'
+            ans += 2 ** k
+    return ans
 
 
