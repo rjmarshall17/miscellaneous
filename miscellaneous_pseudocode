@@ -110,6 +110,18 @@ add up all movies recursive function parameters: first index, list of movie dura
             duration at second index
     call add up all movies recursive with first index + 1, list of movie durations, return list
 
+main function
+    get list of all movies and durations, either iterative or recursive, list format:
+        0 - addition of durations
+        1 - first movie duration
+        2 - second movie duration
+
+    for movie times in sorted all movie durations, i.e.:
+            for movie_times in sorted(all_movies_durations, key=lambda x: x[0])
+        if movie times [0] > flight duration - 30
+            print best movie previous[1], previous[2], previous[0]
+        previous = movie times
+
 Leet Code Accounts Merge:
 -------------------------
 The input is a list of lists where element 0 in each list is a username and the remaining elements are
