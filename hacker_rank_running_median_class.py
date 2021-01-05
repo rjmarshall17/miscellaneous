@@ -64,6 +64,9 @@ if __name__ == '__main__':
 
     expected_output = os.environ['OUTPUT_PATH'].replace('output','expected_output')
     assert open(os.environ['OUTPUT_PATH'], 'r').read() == open(expected_output,'r').read()
+    # print("The results matched the expected results:")
+    # print(" Results: %s" % open(os.environ['OUTPUT_PATH'], 'r').read())
+    # print("Expected: %s" % open(expected_output,'r').read())
     print("The expected output from %s matches the output in %s" % (expected_output,
                                                                     os.environ['OUTPUT_PATH']))
 
