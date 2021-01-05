@@ -72,4 +72,4 @@ class BalancedBrackets:
         self.bracket_index = -1
         self.count = 0
 
-    def __check_match__(self, ):
+    # def __check_match__(self, ):
