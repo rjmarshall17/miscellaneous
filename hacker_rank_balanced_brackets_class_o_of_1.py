@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+
 import os
 
 """
@@ -38,7 +39,7 @@ Constraints
 
 1 <= n <= 10**3
 1 <= |s| <= 10**3 where |s| is the length of the sequence
-All characters in the sequences ∈ { {, }, (, ), [, ] }.
+All characters in the sequences ? { {, }, (, ), [, ] }.
 
 Output Format
 
@@ -64,45 +65,11 @@ The string {[(])} is not balanced because the brackets enclosed by the matched p
 The string {{[[(())]]}} meets both criteria for being a balanced string, so we print YES on a new line.
 """
 
-MATCHING_PARENTHESES = {
-    '}': '{',
-    ')': '(',
-    ']': '[',
-}
+class BalancedBrackets:
+    def __init__(self, string_in):
+        self.string = string_in
+        self.string_index = 0
+        self.bracket_index = -1
+        self.count = 0
 
-
-# is_balanced() will check the incoming string to see if the
-# brackets are balanced.
-# Time complexity is: O(n) since we have to look at every character in the string.
-# Space complexity is: O(m) which will depend on the number of characters will be
-# in the stack before being unwound.
-def is_balanced(incoming_string):
-    parentheses = []
-    for character in incoming_string:
-        if character in MATCHING_PARENTHESES.values():
-            parentheses.append(character)
-        elif character in MATCHING_PARENTHESES:
-            if not parentheses:
-                return "NO"
-            if parentheses[-1] != MATCHING_PARENTHESES[character]:
-                return "NO"
-            parentheses.pop()
-    if len(parentheses) > 0:
-        return "NO"
-    return "YES"
-
-
-if __name__ == '__main__':
-    fptr = open(os.environ['OUTPUT_PATH'], 'w')
-    expected_results = (open(os.environ['OUTPUT_PATH'].replace('output','expected_output'),'r')).read().splitlines()
-    total_inputs = int(input())
-
-    for input_counter in range(total_inputs):
-        bracket_string = input()
-
-        result = is_balanced(bracket_string)
-        fptr.write(result + '\n')
-        assert result == expected_results[input_counter]
-
-    fptr.close()
-    print("All tests for: %s passed" % os.environ['OUTPUT_PATH'])
+    def __check_match__(self, ):
