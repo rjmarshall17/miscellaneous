@@ -88,6 +88,9 @@ compartments in this substring.
 
 def count_items(items_string: str) -> int:
     # print("count_items: Got string: '%s'" % items_string)
+    # If we don't have at least one compartment, return 0
+    if items_string.count('|') < 2:
+        return 0
     count = 0
     total_count = 0
     add_item = False
@@ -106,6 +109,8 @@ def count_items(items_string: str) -> int:
 
 
 def rfind_count_items(items_string: str) -> int:
+    if items_string.count('|') < 2:
+        return 0
     return items_string[items_string.find('|'):items_string.rfind('|')].count('*')
 
 
