@@ -22,8 +22,7 @@ def is_leap_year(check_year):
 
 
 def get_days_since_1970(year_in):
-    # Start with -1 days otherwise the calculation was off by 1 day
-    total_days = -1
+    total_days = 0
     for y in range(1970, year_in):
         if is_leap_year(y):
             total_days += LEAP_YEAR_DAYS
@@ -49,7 +48,8 @@ EXAMPLE_INPUTS = [
 
 if __name__ == '__main__':
     for i, input_data in enumerate(EXAMPLE_INPUTS):
-        datetime_days = (datetime.strptime(input_data, '%Y%m%d') - datetime.strptime('19700101', '%Y%m%d')).days
+        # The epoch date needs to be 12/31/1969 since 1/1/1970 is already 1 day.
+        datetime_days = (datetime.strptime(input_data, '%Y%m%d') - datetime.strptime('19691231', '%Y%m%d')).days
         year = int(input_data[:4])
         month = int(input_data[4:6])
         day = int(input_data[6:])
