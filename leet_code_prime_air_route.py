@@ -14,7 +14,7 @@ Each aircraft should be assigned two shipping routes at once: one forward
 route and one return route. Due to the complex scheduling of flight plans, 
 all aircraft have a fixed maximum operating travel distance, and cannot
 be scheduled to fly a shipping route that requires more travel distance
-than the prescribed maximum opeerating travel distance. The goal of the
+than the prescribed maximum operating travel distance. The goal of the
 system is to optimize the total operating travel distance of a given aircraft.
 A forward/return shipping rout pair is considered to be "optimal" if there 
 does not exist another pair that has a higher operating travel travel distance
