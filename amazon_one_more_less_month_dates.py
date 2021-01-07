@@ -2,6 +2,12 @@
 
 from datetime import datetime
 
+"""
+Amazon Phone Interview Question January 5, 2021
+Given two dates, determine if the dates are less than one month apart, exactly one month apart, or 
+more than one month apart.
+"""
+
 NORMAL_MONTH_DAYS = [-1, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
 LEAP_YEAR_MONTH_DAYS = [-1, 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
 
