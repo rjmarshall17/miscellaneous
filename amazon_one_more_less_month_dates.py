@@ -2,9 +2,6 @@
 
 from datetime import datetime
 
-START_DATE = 19700101
-NORMAL_DAYS = 365
-LEAP_YEAR_DAYS = 366
 NORMAL_MONTH_DAYS = [-1, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
 LEAP_YEAR_MONTH_DAYS = [-1, 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
 
@@ -37,9 +34,9 @@ def get_days_since_1970(year_in):
     total_days = 0
     for y in range(1970, year_in):
         if is_leap_year(y):
-            total_days += LEAP_YEAR_DAYS
+            total_days += sum(LEAP_YEAR_MONTH_DAYS[1:])
         else:
-            total_days += NORMAL_DAYS
+            total_days += sum(NORMAL_MONTH_DAYS[1:])
     return total_days
 
 
