@@ -17,6 +17,36 @@ Is balanced function parameter the string containing the brackets
         return False
     return True
 
+Hacker Rank Balanced Brackets Pointers Approach:
+------------------------------------------------
+If the incoming value is a string, convert it to a list, e.g.
+check string <- [x for x in incoming string]
+FILL CHARACTER <- '#'
+BRACKETS <- {
+    '}': '{',
+    ']': '[',
+    ')': '(',
+}
+stack <- -1
+for index in range length of check string
+    if check string [index] in BRACKETS.values()
+        stack = index
+    else if check string [index] in BRACKETS
+        if stack < 0
+            return False
+        if check string [stack] == BRACKETS [check string [index]]
+            check string [stack] <- FILL CHARACTER
+            check string [index] <- FILL CHARACTER
+        else
+            return False
+        while check string [stack] == FILL CHARACTER
+            stack -= 1
+            if stack < 0
+                exit while loop
+    else
+        return False
+return stack == -1
+
 Hacker Rank Running Median:
 ---------------------------
 This challenge makes use of a max and a min heap. The max heap will be used to hold the lower half of the
