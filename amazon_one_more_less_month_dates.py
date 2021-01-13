@@ -8,7 +8,7 @@ Given two dates, determine if the dates are less than one month apart, exactly o
 more than one month apart.
 """
 
-NORMAL_MONTH_DAYS = [-1, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+NON_LEAP_YEAR_MONTH_DAYS = [-1, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
 LEAP_YEAR_MONTH_DAYS = [-1, 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
 
 DATE_INDICES = {
@@ -36,13 +36,27 @@ def is_leap_year(check_year):
     return False
 
 
+def leap_years_since_year_1(year):
+    if not isinstance(year, int):
+        raise ValueError("The year must be an integer")
+    if year < 1:
+        raise ValueError("The year must be a positive integer")
+    year -= 1
+    return (year // 4) - (year // 100) + (year // 400)
+
+
+def get_days_since_year_1(year):
+	leap_years = leap_years_since_year_1(year)
+	return (((year - 1) - leap_years) * sum(NON_LEAP_YEAR_MONTH_DAYS[1:]) + (leap_years * sum(LEAP_YEAR_MONTH_DAYS[1:])))
+
+
 def get_days_since_1970(year_in):
     total_days = 0
     for y in range(1970, year_in):
         if is_leap_year(y):
             total_days += sum(LEAP_YEAR_MONTH_DAYS[1:])
         else:
-            total_days += sum(NORMAL_MONTH_DAYS[1:])
+            total_days += sum(NON_LEAP_YEAR_MONTH_DAYS[1:])
     return total_days
 
 
@@ -52,11 +66,11 @@ def get_days_in_year(get_year, get_month, get_day):
         if m == 2 and is_leap_year(get_year):
             days_in_year += 29
         else:
-            days_in_year += NORMAL_MONTH_DAYS[m]
+            days_in_year += NON_LEAP_YEAR_MONTH_DAYS[m]
     return days_in_year + get_day
 
 
-def are_dates_month_apart(date1: str, date2: str) -> str:
+def are_dates_month_apart(date1: str, date2: str, use_year_1: bool) -> str:
     dates_by_days = {}
     for datestr in (date1, date2):
         # The date values will be year, month and day
@@ -66,10 +80,16 @@ def are_dates_month_apart(date1: str, date2: str) -> str:
                 date_values[index] = int(datestr[DATE_FORMAT_INDICES[index][0]:DATE_FORMAT_INDICES[index][1]])
             else:
                 date_values[index] = int(datestr[DATE_FORMAT_INDICES[index][0]:])
-        dates_by_days[get_days_since_1970(date_values[DATE_INDICES['year']]) +
-                      get_days_in_year(date_values[DATE_INDICES['year']],
-                                       date_values[DATE_INDICES['month']],
-                                       date_values[DATE_INDICES['day']])] = date_values.copy()
+        if use_year_1:
+            dates_by_days[get_days_since_year_1(date_values[DATE_INDICES['year']]) +
+                          get_days_in_year(date_values[DATE_INDICES['year']],
+                                           date_values[DATE_INDICES['month']],
+                                           date_values[DATE_INDICES['day']])] = date_values.copy()
+        else:
+            dates_by_days[get_days_since_1970(date_values[DATE_INDICES['year']]) +
+                          get_days_in_year(date_values[DATE_INDICES['year']],
+                                           date_values[DATE_INDICES['month']],
+                                           date_values[DATE_INDICES['day']])] = date_values.copy()
 
     # We only have two dates, so check to see how far apart they are
     difference_in_days = abs(list(dates_by_days.keys())[0] - list(dates_by_days.keys())[1])
@@ -78,7 +98,7 @@ def are_dates_month_apart(date1: str, date2: str) -> str:
     if is_leap_year(dates_by_days[min_date][0]):
         days_in_month = LEAP_YEAR_MONTH_DAYS[dates_by_days[min_date][1]]
     else:
-        days_in_month = NORMAL_MONTH_DAYS[dates_by_days[min_date][1]]
+        days_in_month = NON_LEAP_YEAR_MONTH_DAYS[dates_by_days[min_date][1]]
     if difference_in_days < days_in_month:
         return 'less than'
     elif difference_in_days > days_in_month:
@@ -113,7 +133,9 @@ if __name__ == '__main__':
     for i, input_data in enumerate(EXAMPLE_INPUTS):
         # The epoch date needs to be 12/31/1969 since 1/1/1970 is already 1 day.
         # datetime_days = (datetime.strptime(input_data, '%Y%m%d') - datetime.strptime('19691231', '%Y%m%d')).days
-        result = are_dates_month_apart(input_data[0], input_data[1])
+        result = are_dates_month_apart(input_data[0], input_data[1], False)
+        result2 = are_dates_month_apart(input_data[0], input_data[1], True)
+        assert result == result2, "1970 and year one differ: %s != %s" % (result, result2)
         assert result == EXPECTED_RESULTS[i], \
             "For %s and %s the result (%s) does not match the expected result: %s" % (input_data[0],
                                                                                       input_data[1],
