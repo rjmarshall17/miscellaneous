@@ -41,12 +41,11 @@ def leap_years_since_year_1(year):
         raise ValueError("The year must be an integer")
     if year < 1:
         raise ValueError("The year must be a positive integer")
-    year -= 1
     return (year // 4) - (year // 100) + (year // 400)
 
 
 def get_days_since_year_1(year):
-	leap_years = leap_years_since_year_1(year)
+	leap_years = leap_years_since_year_1(year - 1)
 	return (((year - 1) - leap_years) * sum(NON_LEAP_YEAR_MONTH_DAYS[1:]) + (leap_years * sum(LEAP_YEAR_MONTH_DAYS[1:])))
 
 
