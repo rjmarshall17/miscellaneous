@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
-from functools import wraps
+from typing import List
+from time import perf_counter
 
 """
 139. Word Break
@@ -39,49 +40,99 @@ Output: false
 """
 
 
-# Use a trie to determine if each sub word within the string is a valid word according to the
-# dictionary we received.
-
-# Let's look at time complexities:
-# For building the trie the time complexity is: O(nm) where n is the number
-# of keys in the trie and m is the length of the longest key.
-# For searching, inserting and deleting the time is: O(an) where n is the
-# total number of words in the trie and a is the length of the word being
-# searched, inserted or deleted.
-class Trie:
-    WORD_TERMINATOR = '*'
-
-    def __init__(self):
-        self.root = {}
-
-    def add(self, word):
-        current_node = self.root
-        for letter in word:
-            if letter not in current_node:
-                current_node[letter] = {'count':0}
-            current_node = current_node[letter]
-            current_node['count'] += 1
-        current_node[Trie.WORD_TERMINATOR] = True
-
-    def search(self, word):
-        current_node = self.root
-        for letter in word:
-            if letter not in current_node:
-                return False
-            current_node = current_node[letter]
-        if Trie.WORD_TERMINATOR not in current_node:
-            return False
+def word_break_brute_force(s: str, word_dict: List[str]) -> bool:
+    if len(s) == 0:
         return True
 
+    # print("Checking word: %s" % s)
+    for word in word_dict:
+        if len(word) > len(s):
+            continue
+        if s.lower().startswith(word.lower()):
+            # print("Found match for %s in: %s" % (word,s))
+            result = word_break_brute_force(s[len(word):], word_dict)
+            if result:
+                return True
+    return False
 
-# Define a decorator for the recursive function that will check if we've already seen a "word"
-def track_words(func):
+
+# The approach that uses the helper function seems to be the fastest so far, there
+# may
+def helper(s: str, dictionary: List[str], memo: dict) -> bool:
+    if len(s) == 0:
+        return True
+    if s in memo:
+        return memo[s]
+
+    for word in dictionary:
+        if s.lower().startswith(word) and helper(s[len(word):], dictionary, memo):
+            memo[s] = True
+            return True
+
+    memo[s] = False
+    return False
+
+
+def word_break_with_helper(s: str, word_dict: List[str]) -> bool:
     memo = {}
-    
-    @wraps(func)
-    def inner(*args):
-        if (args,) not in memo:
-            memo[(args,)] = func(*args)
-            print("Added %s to memo" % (args,))
-        return memo[(args,)]
-    return inner
+    return helper(s, word_dict, memo)
+
+
+# Adding the break below speeds this up significantly, also converting the word_dict to a
+# set appears to speed it up a little as well.
+def word_break_dp(s: str, word_dict: List[str]) -> bool:
+    dp = [True] + [False for x in range(len(s))]
+    wd = set(word_dict)
+    for i in range(1, len(s) + 1):
+        for j in range(i - 1, -1, -1):
+            if dp[j] and s[j:i] in wd:
+                dp[i] = True
+                break
+    return dp[len(s)]
+
+
+EXAMPLE_INPUT = [
+    ["leetcode", ["leet", "code"]],
+    ["applepenapple", ["apple", "pen"]],
+    ["catsandog", ["cats", "dog", "sand", "and", "cat"]],
+    ["aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaab",
+        ["a","aa","aaa","aaaa","aaaaa","aaaaaa","aaaaaaa","aaaaaaaa","aaaaaaaaa","aaaaaaaaaa"]],
+]
+
+EXPECTED_RESULTS = [
+    True,
+    True,
+    False,
+    False
+]
+
+
+if __name__ == '__main__':
+    for i, input_data in enumerate(EXAMPLE_INPUT):
+        start_time = perf_counter()
+        result_brute = word_break_brute_force(input_data[0], input_data[1])
+        end_time = perf_counter()
+        brute_run_time = end_time - start_time
+
+        start_time = perf_counter()
+        result_helper = word_break_with_helper(input_data[0], input_data[1])
+        end_time = perf_counter()
+        helper_run_time = end_time - start_time
+
+        tart_time = perf_counter()
+        result_dp = word_break_dp(input_data[0], input_data[1])
+        end_time = perf_counter()
+        dp_run_time = end_time - start_time
+
+        print(f"Finished brute force in {brute_run_time:.8f} seconds")
+        print(f"     Finished helper in {helper_run_time:.8f} seconds")
+        print(f"         Finished dp in {dp_run_time:.8f} seconds")
+
+        output = "Result (%s) {} expected (%s) for: %s" % (result_dp,
+                                                           EXPECTED_RESULTS[i],
+                                                           input_data[0])
+        assert result_brute == EXPECTED_RESULTS[i], output.format("does not match")
+        assert result_helper == EXPECTED_RESULTS[i], output.format("does not match")
+        assert result_dp == EXPECTED_RESULTS[i], output.format("does not match")
+
+        print(output.format("matches"))
