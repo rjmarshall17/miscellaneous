@@ -82,6 +82,26 @@ def word_break_with_helper(s: str, word_dict: List[str]) -> bool:
     return helper(s, words_set, memo)
 
 
+def word_break_builtin_helper(s: str, word_dict: List[str]) -> bool:
+    words_set = set(word_dict)
+    memo = {}
+
+    def get_words(s: str) -> bool:
+        if len(s) == 0:
+            return True
+        if s in memo:
+            return memo[s]
+
+        for word in words_set:
+            if s.lower().startswith(word) and get_words(s[len(word):]):
+                memo[s] = True
+                return True
+
+        memo[s] = False
+        return False
+    return get_words(s)
+
+
 # Adding the break below speeds this up significantly, also converting the word_dict to a
 # set appears to speed it up a little as well, see above. This is slower than the function
 # with the helper except for the last case which is much more complicated. In that case,
@@ -131,6 +151,11 @@ if __name__ == '__main__':
         end_time = perf_counter()
         dp_run_time = end_time - start_time
 
+        start_time = perf_counter()
+        result_builtin = word_break_builtin_helper(input_data[0], input_data[1])
+        end_time = perf_counter()
+        builtin_run_time = end_time - start_time
+
         # start_time = perf_counter()
         # result_start_dict = word_break_start_dict(input_data[0], input_data[1])
         # end_time = perf_counter()
@@ -145,6 +170,7 @@ if __name__ == '__main__':
 
         print(output.format("matches"))
         # print(f"Finished brute force in {brute_run_time:.8f} seconds")
-        print(f"     Finished helper in {helper_run_time:.8f} seconds")
-        print(f"         Finished dp in {dp_run_time:.8f} seconds")
+        print(f"        Finished helper in {helper_run_time:.8f} seconds")
+        print(f"Finished builtin helper in {helper_run_time:.8f} seconds")
+        print(f"            Finished dp in {dp_run_time:.8f} seconds")
 
