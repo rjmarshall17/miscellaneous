@@ -3,6 +3,7 @@
 import json
 from datetime import datetime, timedelta
 import sys
+import time
 from argparse import ArgumentParser
 from sqlalchemy import create_engine
 import logging
@@ -16,6 +17,7 @@ DATE_CHOICES = [
     '2021-05-04',
 ]
 
+OPTIONS_DATABASE = 'options'
 SKIP_EXPIRATION_FOR = []
 EXPIRATION_DATES_TO_SKIP = []
 SKIP_BAD_TICKERS = []
@@ -25,6 +27,8 @@ def main():
     parser = ArgumentParser('Update the options DB from results JSON files')
     parser.add_argument('--verbose',dest='verbose',help='Enable verbose logging',default=False,action='store_true')
     parser.add_argument('--debug',dest='debug',help='Enable debug logging',default=False,action='store_true')
+    parser.add_argument('--drop-create',dest='drop_create',help='Drop/Create the options database',
+                        default=False,action='store_true')
     parser.add_argument(dest='date',help='The date to use', choices=DATE_CHOICES)
     args = parser.parse_args()
 
@@ -44,12 +48,22 @@ def main():
         SKIP_BAD_TICKERS.append('TROW')
         results = json.load(open('/home/rob/tmp/all_options_20210503.json','r'))
     elif today.strftime('%Y-%m-%d') == '2021-05-04':
-        SKIP_EXPIRATION_FOR.append('AAPL')
-        EXPIRATION_DATES_TO_SKIP.append(datetime(2021, 5, 7, 0, 0))
+        # SKIP_EXPIRATION_FOR.append('AAPL')
+        # EXPIRATION_DATES_TO_SKIP.append(datetime(2021, 5, 7, 0, 0))
         results = json.load(open('/home/rob/tmp/all_options_20210504.json', 'r'))
 
     su = stock_option_updates.UpdateStockOptions(verbose=args.verbose, debug=args.debug)
-    engine = create_engine('mariadb+mariadbconnector://rob:Ultim8!@127.0.0.1/options')
+    # engine = create_engine('mariadb+mariadbconnector://rob:Ultim8!@127.0.0.1/%s' % (OPTIONS_DATABASE))
+    engine = create_engine('mysql://rob:Ultim8!@127.0.0.1/%s' % (OPTIONS_DATABASE))
+
+    if args.drop_create:
+        conn = engine.connect()
+        cursor = conn.execute('SHOW DATABASES')
+        if OPTIONS_DATABASE in [x[0] for x in cursor.fetchall()]:
+            cursor = conn.execute('DROP DATABASE %s' % (OPTIONS_DATABASE))
+            cursor.close()
+            cursor = conn.execute('CREATE DATABASE %s' % (OPTIONS_DATABASE))
+            cursor.close()
 
     for j,result in enumerate(results):
         ticker = result[0][0][0]
@@ -75,3 +89,8 @@ def main():
                         otype, date=today, expiration=expiration)
                 print("Converted to dataframe")
                 df.to_sql(ticker, engine, if_exists='append')
+                time.sleep(5)   # Just give everything a few seconds to settle
+
+
+if __name__ == '__main__':
+    main()
